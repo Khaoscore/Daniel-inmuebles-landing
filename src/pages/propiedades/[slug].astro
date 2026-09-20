@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertyGallery from '../../components/react/PropertyGallery.tsx';
+import ThemedIcon from '../../components/ui/ThemedIcon.astro';
+import MapSection from '../../components/sections/MapSection.astro';
+import {
+  AMENITY_LABELS,
+  AREA_OVERRIDES,
+  PROPERTIES,
+  formatPriceFull,
+  type Amenities,
+  type Property,
+} from '../../data/properties';
+
+/** Figma: nodos 163:5218 (claro) y 149:1947 (oscuro). */
+
+export function getStaticPaths() {
+  return PROPERTIES.map((property) => ({
+    params: { slug: property.slug },
+    props: { property },
+  }));
+}
+
+interface Props {
+  property: Property;
+}
+
+const { property } = Astro.props;
+
+const images = property.gallery?.length ? property.gallery : [property.image];
+
+// Solo se muestran las celdas con dato: el resto llegará con la base de datos.
+const specs = [
+  { label: 'Área', value: AREA_OVERRIDES[property.id] ?? `${property.area} m²` },
+  { label: 'Habitaciones', value: String(property.bedrooms) },
+  { label: 'Baños', value: String(property.bathrooms) },
+  { label: 'Antigüedad', value: property.age },
+  { label: 'Estrato', value: String(property.stratum) },
+  { label: 'Parqueadero', value: String(property.parking) },
+  { label: 'Pisos', value: property.floors ? String(property.floors) : undefined },
+  {
+    label: 'Impuesto predial',
+    value: property.propertyTax ? formatPriceFull(property.propertyTax) : undefined,
+  },
+  {
+    label: 'Administración',
+    value: property.adminFee ? property.adminFee.toLocaleString('es-CO') : undefined,
+  },
+].filter((spec): spec is { label: string; value: string } => Boolean(spec.value));
+
+const amenities = Object.entries(property.amenities ?? {})
+  .filter(([, enabled]) => enabled)
+  .map(([key]) => AMENITY_LABELS[key as keyof Amenities]);
+
+const listingLabel = property.listingLabel ?? `Venta de ${property.type.toLowerCase()}`;
+
+// Datos estructurados para buscadores e inmobiliarias agregadoras.
+const listingSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateListing',
+  name: property.title,
+  url: new URL(`/propiedades/${property.slug}`, Astro.site).toString(),
+  datePosted: new Date().toISOString().split('T')[0],
+  offers: {
+    '@type': 'Offer',
+    price: property.price,
+    priceCurrency: 'COP',
+    availability:
+      property.status === 'disponible'
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/SoldOut',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: property.neighborhood,
+    addressRegion: property.city,
+    addressCountry: 'CO',
+  },
+  numberOfBedrooms: property.bedrooms,
+  numberOfBathroomsTotal: property.bathrooms,
+  floorSize: { '@type': 'QuantitativeValue', value: property.area, unitCode: 'MTK' },
+};
+---
+
+<BaseLayout
+  title={`${property.title} — Daniel Inmuebles`}
+  description={`${listingLabel} en ${property.neighborhood}, ${property.city}. ${property.area} m², ${property.bedrooms} habitaciones y ${property.bathrooms} baños por ${formatPriceFull(property.price)}.`}
+>
+  <section class="section-x pt-11 pb-6">
+    <div class="container-site flex flex-col gap-2">
+      <p class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.88px] text-heading md:text-[44px] md:leading-[46.2px]">
+        Propiedades
+      </p>
+      <p class="pb-[18px] text-[16px] leading-5 text-heading">
+        Filtra por tipo, zona, habitaciones y precio, y ubica cada inmueble en el mapa.
+      </p>
+
+      <nav aria-label="Ruta de navegación" class="text-[14px] text-fg/70">
+        <a href="/" class="transition-opacity hover:opacity-70">Inicio</a>
+        <span class="mx-2">/</span>
+        <a href="/propiedades" class="transition-opacity hover:opacity-70">Propiedades</a>
+        <span class="mx-2">/</span>
+        <span class="text-fg">{property.title}</span>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section-x pb-16">
+    <div class="container-site flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-center">
+      <div class="flex-1">
+        <PropertyGallery
+          client:load
+          images={images}
+          alt={property.title}
+          priceLabel={formatPriceFull(property.price)}
+        />
+      </div>
+
+      <div class="flex flex-1 flex-col gap-4 pt-1">
+        <p class="text-[16px] leading-5 font-semibold text-eyebrow">{listingLabel}</p>
+
+        <h1
+          class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.96px] text-heading md:text-[48px] md:leading-[46px]"
+        >
+          {property.title}
+        </h1>
+
+        <dl class="grid grid-cols-2 gap-2 text-center sm:grid-cols-3">
+          {
+            specs.map((spec) => (
+              <div
+                class="flex flex-col items-center justify-center gap-1 rounded-(--radius-chip) bg-spec px-6 py-4"
+              >
+                <dt class="text-[18px] leading-[22px] font-semibold text-spec-label md:text-[20px]">
+                  {spec.label}
+                </dt>
+                <dd class="text-[16px] leading-5 font-semibold text-spec-fg">{spec.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+
+        {
+          property.highlights && property.highlights.length > 0 && (
+            <ul class="flex list-disc flex-col gap-4 pt-2 pl-6 text-[16px] leading-5 text-heading">
+              {property.highlights.map((highlight) => (
+                <li>
+                  <span class="font-semibold">{highlight.label}</span>
+                  <br />
+                  {highlight.text}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
+        {
+          property.closingNote && (
+            <p class="text-[22px] leading-9 font-semibold tracking-[-0.52px] text-eyebrow md:text-[26px]">
+              {property.closingNote}
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  {
+    amenities.length > 0 && (
+      <section class="section-x pb-16">
+        <div class="container-site grid grid-cols-1 gap-x-[30px] gap-y-[21px] sm:grid-cols-2 lg:grid-cols-3">
+          {amenities.map((amenity) => (
+            <div class="flex items-center justify-center gap-4 rounded-(--radius-chip) bg-spec p-4">
+              <ThemedIcon name={amenity.icon} class="size-6 object-contain" />
+              <p class="flex flex-col items-center gap-1 text-center text-[16px] leading-5 font-semibold">
+                <span class="text-spec-label">{amenity.label}</span>
+                <span class="text-spec-fg">Sí</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <MapSection title="Ubicación y propiedades cercanas" showCta={false} />
+</BaseLayout>
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(listingSchema)} />

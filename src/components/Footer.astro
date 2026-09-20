@@ -1,0 +1,106 @@
+---
+import {
+  BRAND,
+  FOOTER_LINKS_PRIMARY,
+  FOOTER_LINKS_SECONDARY,
+  LEGAL_LINKS,
+  SOCIAL_LINKS,
+} from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<!-- Figma: nodos 209:974 (claro) y 149:1406 (oscuro). Oscuro en ambos modos. -->
+<footer class="bg-footer px-5 pt-16 pb-12 text-white md:px-10 xl:px-24 xl:pt-24">
+  <div class="mx-auto flex w-full max-w-[1248px] flex-col gap-12">
+    <div class="flex flex-col gap-10 md:flex-row md:gap-[94px]">
+      <div class="flex w-full justify-center md:w-[298px] md:items-center">
+        <p
+          class="font-display text-[60px] leading-[55px] font-extrabold tracking-[-1.2px] text-white"
+        >
+          Daniel<br />Inmuebles
+        </p>
+      </div>
+
+      <nav class="flex flex-col gap-2" aria-label="Enlaces del sitio">
+        <p class="px-6 py-1 text-[16px] leading-5 font-semibold">Links</p>
+        {
+          FOOTER_LINKS_PRIMARY.map((link) => (
+            <a
+              href={link.href}
+              class="px-6 py-1 text-[16px] leading-5 whitespace-nowrap text-white transition-colors hover:text-brand-yellow"
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+
+      <div class="flex flex-col gap-2">
+        <nav class="flex flex-col gap-2" aria-label="Más enlaces">
+          {
+            FOOTER_LINKS_SECONDARY.map((link) => (
+              <a
+                href={link.href}
+                class="px-6 py-1 text-[16px] leading-5 whitespace-nowrap text-white transition-colors hover:text-brand-yellow"
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+
+        <p class="px-6 py-1 text-[16px] leading-5 font-semibold">Síguenos</p>
+        <ul class="flex items-start gap-4 px-6">
+          {
+            SOCIAL_LINKS.map((social) => (
+              <li>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="block transition-opacity hover:opacity-70"
+                >
+                  <span class="sr-only">{social.label}</span>
+                  <img src={social.icon} alt="" width="24" height="24" aria-hidden="true" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="h-px w-full bg-footer-line"></div>
+
+    <div
+      class="flex flex-col gap-4 text-[12px] font-semibold text-white md:flex-row md:items-center md:justify-between"
+    >
+      <p>
+        © {year} {BRAND.legalName}
+        <span class="mx-2">-</span>
+        Todos los derechos reservados
+        <span class="mx-2">-</span>
+        Powered by{' '}
+        <a
+          href="https://khaoscore.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline decoration-from-font [text-underline-position:from-font]"
+        >
+          Khaos Core
+        </a>
+      </p>
+
+      <nav class="flex flex-wrap items-start gap-6" aria-label="Enlaces legales">
+        {
+          LEGAL_LINKS.map((link) => (
+            <a href={link.href} class="whitespace-nowrap transition-colors hover:text-brand-yellow">
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
+</footer>

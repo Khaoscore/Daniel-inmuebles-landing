@@ -1,0 +1,56 @@
+---
+import FaqAccordion, { type FaqItem } from '../react/FaqAccordion.tsx';
+
+/** Figma: nodos 163:4670 (claro) y 149:1363 (oscuro). Respuestas del texto 149:2270. */
+
+const faqs: FaqItem[] = [
+  {
+    question: '¿Cuánto cuesta que vendan mi inmueble?',
+    answer: 'Nuestra comisión es del 3% sobre el valor de venta.',
+    emphasis: '3%',
+  },
+  {
+    question: '¿En qué zonas de Bogotá trabajan?',
+    answer: 'Trabajamos en toda Bogotá, con especial enfoque en el norte de la ciudad.',
+  },
+  {
+    question: '¿Cuánto tarda una valoración comercial?',
+    answer: 'La realizamos de inmediato, para que puedas avanzar sin esperas.',
+  },
+  {
+    question: '¿Puedo agendar una visita a una propiedad?',
+    answer:
+      'Sí. Escríbenos y un asesor te atenderá de inmediato para agendar tu visita según disponibilidad.',
+  },
+  {
+    question: '¿Me acompañan en la escrituración?',
+    answer:
+      'Sí. Te acompañamos desde la promesa de compraventa hasta la escrituración y cierre del proceso.',
+  },
+];
+
+// Datos estructurados para que Google muestre el FAQ en resultados.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+<section id="faq" class="section-y flex flex-col items-center justify-center px-5 md:px-10">
+  <div class="flex w-full max-w-[1200px] flex-col items-center gap-3">
+    <h2
+      class="font-display w-full pb-7 text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]"
+    >
+      Preguntas frecuentes
+    </h2>
+
+    <FaqAccordion client:visible items={faqs} />
+  </div>
+</section>
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(faqSchema)} />

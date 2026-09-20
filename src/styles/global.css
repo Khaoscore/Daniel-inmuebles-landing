@@ -1,0 +1,447 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   Daniel Inmuebles — Design tokens
+   Fuente de verdad: Figma "Web Daniel Inmuebles", página "Single page 2"
+     · Modo claro  → frames 163:4247, 163:4744, 163:5218
+     · Modo oscuro → frames 149:949, 152:2414, 149:1947
+   Paleta y tipografía: páginas "Color palette" (1:2) y "Tipography" (1:3)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. Primitivos: la paleta de marca, igual en ambos modos
+   ------------------------------------------------------------ */
+@theme {
+  /* "Bg blue" — fondo del modo oscuro */
+  --color-navy-950: #021024;
+  /* "Black blue" — texto y botones del modo claro */
+  --color-navy-925: #0c1727;
+  /* Rampa #021024 paso 4 — bandas y tarjetas oscuras */
+  --color-navy-920: #031939;
+  /* "Dark blue" — azul de marca */
+  --color-navy-900: #031c69;
+  --color-navy-800: #052a5e;
+  --color-navy-600: #083f8d;
+  /* "Medium Blue" */
+  --color-blue-500: #0f47f1;
+  /* "Light blue" */
+  --color-blue-200: #9dbdfe;
+  /* "Yellow" — color de acción */
+  --color-brand-yellow: #ffcc00;
+  /* Superficie gris cálida del modo claro */
+  --color-sand-100: #f6f5f4;
+
+  /* --- Tipografía ---------------------------------------- */
+  /* Font 3: títulos display */
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  /* Font 1: interfaz, botones, subtítulos */
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  /* Font 4: párrafos de lectura larga */
+  --font-body: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+
+  /* --- Radios -------------------------------------------- */
+  --radius-card: 20px;
+  --radius-panel: 18px;
+  --radius-field: 16px;
+  --radius-button: 12px;
+  --radius-pill: 11px;
+  --radius-chip: 8px;
+
+  /* --- Layout -------------------------------------------- */
+  /* Ancho del contenedor: 1440 - (120 * 2) */
+  --container-site: 1200px;
+}
+
+/* ------------------------------------------------------------
+   2. Tokens semánticos: cada rol del diseño, resuelto por modo.
+      Los componentes sólo usan estos; nunca un color fijo.
+   ------------------------------------------------------------ */
+@theme inline {
+  /* Superficies y texto base */
+  --color-page: var(--c-page);
+  --color-fg: var(--c-fg);
+  --color-heading: var(--c-heading);
+  --color-card: var(--c-card);
+  /* Precios y subtítulos de tarjeta */
+  --color-accent: var(--c-accent);
+  /* Etiqueta sobre el título ("Venta de apartamento") */
+  --color-eyebrow: var(--c-eyebrow);
+
+  /* Botón principal y botón con borde */
+  --color-btn: var(--c-btn);
+  --color-btn-fg: var(--c-btn-fg);
+  --color-line: var(--c-line);
+
+  /* Header y footer */
+  --color-header: var(--c-header);
+  --color-header-border: var(--c-header-border);
+  --color-footer: var(--c-footer);
+  --color-footer-line: var(--c-footer-line);
+
+  /* Bandas de estadísticas y CTA de valoración */
+  --color-band: var(--c-band);
+  --color-stat: var(--c-stat);
+  --color-cta: var(--c-cta);
+  --color-cta-fg: var(--c-cta-fg);
+
+  /* Tarjeta "Destacado" de "Cinco formas" */
+  --color-spot: var(--c-spot);
+  --color-spot-fg: var(--c-spot-fg);
+  --color-spot-link: var(--c-spot-link);
+
+  /* Tarjeta "01 · Comprar" */
+  --color-feature: var(--c-feature);
+  --color-feature-fg: var(--c-feature-fg);
+  --color-feature-label: var(--c-feature-label);
+  --color-feature-btn: var(--c-feature-btn);
+
+  /* Tarjeta "02 · Vender" */
+  --color-contrast: var(--c-contrast);
+  --color-contrast-btn: var(--c-contrast-btn);
+  --color-contrast-btn-fg: var(--c-contrast-btn-fg);
+
+  /* Testimonios */
+  --color-quote-name: var(--c-quote-name);
+  --color-quote-role: var(--c-quote-role);
+
+  /* Mapa */
+  --color-map-frame: var(--c-map-frame);
+  --color-map-chip: var(--c-map-chip);
+  --color-pin: var(--c-pin);
+
+  /* Buscador: bloques de filtro, opciones, campo de texto */
+  --color-field: var(--c-field);
+  --color-field-label: var(--c-field-label);
+  --color-option: var(--c-option);
+  --color-option-border: var(--c-option-border);
+  --color-option-fg: var(--c-option-fg);
+  --color-option-active: var(--c-option-active);
+  --color-option-active-fg: var(--c-option-active-fg);
+  --color-track: var(--c-track);
+  --color-input: var(--c-input);
+  --color-input-border: var(--c-input-border);
+  --color-input-fg: var(--c-input-fg);
+  --color-ghost: var(--c-ghost);
+  --color-toggle: var(--c-toggle);
+  --color-toggle-fg: var(--c-toggle-fg);
+  --color-toggle-line: var(--c-toggle-line);
+  --color-more: var(--c-more);
+  --color-more-fg: var(--c-more-fg);
+  --radius-toggle: var(--r-toggle);
+
+  /* Ficha de detalle */
+  --color-spec: var(--c-spec);
+  --color-spec-label: var(--c-spec-label);
+  --color-spec-fg: var(--c-spec-fg);
+  --color-gallery: var(--c-gallery);
+  --color-dot: var(--c-dot);
+}
+
+/* ------------------------------------------------------------
+   3. Valores por modo
+   ------------------------------------------------------------ */
+
+/* Modo claro (día) */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+
+  --c-page: #ffffff;
+  --c-fg: #0c1727;
+  --c-heading: #031939;
+  --c-card: #f6f5f4;
+  --c-accent: #0c1727;
+  --c-eyebrow: #031939;
+
+  --c-btn: #0c1727;
+  --c-btn-fg: #ffffff;
+  --c-line: #0c1727;
+
+  --c-header: #ffffff;
+  --c-header-border: #e4e4e4;
+  --c-footer: #020d1d;
+  --c-footer-line: #ffcc00;
+
+  --c-band: #031939;
+  --c-stat: #ffcc00;
+  --c-cta: #ffcc00;
+  --c-cta-fg: #0c1727;
+
+  --c-spot: #031939;
+  --c-spot-fg: #ffffff;
+  --c-spot-link: #ffffff;
+
+  --c-feature: #f6f5f4;
+  --c-feature-fg: #0c1727;
+  --c-feature-label: #0c1727;
+  --c-feature-btn: #0c1727;
+
+  --c-contrast: #0c1727;
+  --c-contrast-btn: #ffcc00;
+  --c-contrast-btn-fg: #0c1727;
+
+  --c-quote-name: #0c1727;
+  --c-quote-role: #0c1727;
+
+  --c-map-frame: #0c1727;
+  --c-map-chip: #052a5e;
+  --c-pin: #ffcc00;
+
+  --c-field: #f6f5f4;
+  --c-field-label: #0c1727;
+  --c-option: #ffffff;
+  --c-option-border: #e4e4e4;
+  --c-option-fg: #959595;
+  --c-option-active: #0c1727;
+  --c-option-active-fg: #ffffff;
+  --c-track: #bcbcbc;
+  --c-input: #f6f5f4;
+  --c-input-border: #bcbcbc;
+  --c-input-fg: #031939;
+  --c-ghost: #bcbcbc;
+  --c-toggle: #ffcc00;
+  --c-toggle-fg: #031939;
+  --c-toggle-line: #0c1727;
+  --c-more: #0c1727;
+  --c-more-fg: #ffcc00;
+  --r-toggle: 8px;
+
+  --c-spec: #f6f5f4;
+  --c-spec-label: #0c1727;
+  --c-spec-fg: #0c1727;
+  --c-gallery: #031939;
+  --c-dot: #f6f5f4;
+
+  --slider-handle: url('/assets/icons/themed/slider-handle-light.svg');
+}
+
+/* Modo oscuro (noche) */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --c-page: #021024;
+  --c-fg: #ffffff;
+  --c-heading: #ffffff;
+  --c-card: #031939;
+  --c-accent: #ffcc00;
+  --c-eyebrow: #ffcc00;
+
+  --c-btn: #ffffff;
+  --c-btn-fg: #031c69;
+  --c-line: #ffffff;
+
+  --c-header: #021024;
+  --c-header-border: transparent;
+  --c-footer: #021024;
+  --c-footer-line: #ffffff;
+
+  --c-band: #031939;
+  --c-stat: #ffffff;
+  --c-cta: #ffffff;
+  --c-cta-fg: #031c69;
+
+  --c-spot: #ffffff;
+  --c-spot-fg: #031c69;
+  --c-spot-link: #031939;
+
+  --c-feature: #ffffff;
+  --c-feature-fg: #031c69;
+  --c-feature-label: #0f47f1;
+  --c-feature-btn: #031c69;
+
+  --c-contrast: #031939;
+  --c-contrast-btn: #ffffff;
+  --c-contrast-btn-fg: #031c69;
+
+  --c-quote-name: #ffffff;
+  --c-quote-role: #ffcc00;
+
+  --c-map-frame: #031939;
+  --c-map-chip: #052a5e;
+  --c-pin: #ffcc00;
+
+  --c-field: #031939;
+  --c-field-label: #9dbdfe;
+  --c-option: #083f8d;
+  --c-option-border: transparent;
+  --c-option-fg: #9dbdfe;
+  --c-option-active: #ffffff;
+  --c-option-active-fg: #031c69;
+  --c-track: #021024;
+  --c-input: #031939;
+  --c-input-border: #4560b2;
+  --c-input-fg: #dae1f7;
+  --c-ghost: #dae1f7;
+  --c-toggle: #ffffff;
+  --c-toggle-fg: #052a5e;
+  --c-toggle-line: #ffffff;
+  --c-more: #ffffff;
+  --c-more-fg: #031c69;
+  --r-toggle: 999px;
+
+  --c-spec: #052a5e;
+  --c-spec-label: #9dbdfe;
+  --c-spec-fg: #ffffff;
+  --c-gallery: #052a5e;
+  --c-dot: #083f8d;
+
+  --slider-handle: url('/assets/icons/themed/slider-handle-dark.svg');
+}
+
+/* En la home oscura el mapa lleva pines blancos y marco azul (frame 149:1139);
+   en la ficha y el buscador los pines siguen amarillos. */
+[data-theme='dark'] [data-map-tone='home'] {
+  --c-pin: #ffffff;
+  --c-map-frame: #083f8d;
+  --c-map-chip: #031939;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--c-page);
+    color: var(--c-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Bricolage Grotesque es variable: fijamos los ejes que usa el diseño */
+  .font-display,
+  h1,
+  h2 {
+    font-variation-settings: 'opsz' 14, 'wdth' 100;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-yellow);
+    outline-offset: 3px;
+  }
+
+  /* Respeta a quien prefiere menos movimiento */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================================
+   Iconos por modo
+   Figma exporta cada icono con el color ya aplicado, así que cada
+   uno tiene dos archivos. Se muestran los dos y se oculta el que
+   no corresponde al modo activo.
+   ============================================================ */
+
+[data-theme='dark'] .only-light,
+[data-theme='light'] .only-dark {
+  display: none !important;
+}
+
+/* Durante el cambio de modo, todo cambia a la vez (ver ThemeToggle.tsx) */
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition: none !important;
+}
+
+/* ============================================================
+   Utilidades de composición
+   ============================================================ */
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+}
+
+/* Sección estándar: 110px vertical, 120px horizontal en desktop */
+@utility section-y {
+  padding-block: 3.5rem;
+
+  @media (width >= 48rem) {
+    padding-block: 110px;
+  }
+}
+
+@utility section-x {
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 120px;
+  }
+}
+
+/*
+  Slider de precio de doble manija. Las dos pistas se superponen y sólo las
+  manijas reciben eventos, para poder arrastrar mínimo y máximo por separado.
+  La manija es el SVG del diseño (20 × 27 px), en su variante de cada modo.
+*/
+@layer components {
+  .range-handle {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    width: 100%;
+    height: 8px;
+    margin: 0;
+    background: transparent;
+    pointer-events: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .range-handle:focus {
+    outline: none;
+  }
+
+  .range-handle::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 27px;
+    border: 0;
+    background: var(--slider-handle) center / 20px 27px no-repeat;
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .range-handle::-moz-range-thumb {
+    width: 20px;
+    height: 27px;
+    border: 0;
+    background: var(--slider-handle) center / 20px 27px no-repeat;
+    cursor: grab;
+    pointer-events: auto;
+  }
+
+  .range-handle:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid var(--color-brand-yellow);
+    outline-offset: 2px;
+  }
+
+  .range-handle::-moz-range-track {
+    background: transparent;
+  }
+}

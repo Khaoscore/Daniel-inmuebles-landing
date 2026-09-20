@@ -1,0 +1,30 @@
+---
+/** Figma: nodos 163:4424 (claro) y 149:1117 (oscuro). */
+
+const stats = [
+  { value: '+250', label: 'Propiedades comercializadas', highlight: true },
+  { value: 'Bogotá', label: 'Especializados en el norte de la ciudad', highlight: false },
+  { value: '1 a 1', label: 'Un asesor asignado a cada proceso', highlight: false },
+  { value: '100%', label: 'Acompañamiento hasta la escrituración', highlight: false },
+];
+---
+
+<section class="section-x bg-band py-16 md:py-24">
+  <div class="container-site grid grid-cols-2 gap-8 lg:grid-cols-4">
+    {
+      stats.map((stat) => (
+        <div class="flex flex-col gap-3">
+          <p
+            class:list={[
+              'font-display text-[40px] leading-[1] font-extrabold tracking-[-1.2px] md:text-[60px] md:leading-[55px]',
+              stat.highlight ? 'text-stat' : 'text-white',
+            ]}
+          >
+            {stat.value}
+          </p>
+          <p class="text-[14px] leading-[22px] font-semibold text-white">{stat.label}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>

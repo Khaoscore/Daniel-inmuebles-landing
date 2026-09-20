@@ -1,0 +1,29 @@
+---
+import { THEMED_ICONS, type ThemedIconName } from '../../data/icons';
+
+/** Icono con una variante por modo. Ver `src/data/icons.ts`. */
+interface Props {
+  name: ThemedIconName;
+  class?: string;
+}
+
+const { name, class: className = '' } = Astro.props;
+const icon = THEMED_ICONS[name];
+---
+
+<img
+  src={icon.light}
+  alt=""
+  width={icon.width}
+  height={icon.height}
+  aria-hidden="true"
+  class:list={['only-light shrink-0', className]}
+/>
+<img
+  src={icon.dark}
+  alt=""
+  width={icon.width}
+  height={icon.height}
+  aria-hidden="true"
+  class:list={['only-dark shrink-0', className]}
+/>

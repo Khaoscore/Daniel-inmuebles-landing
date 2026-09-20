@@ -1,0 +1,81 @@
+---
+/** Figma: nodos 163:4352 (claro) y 149:1045 (oscuro). */
+
+const pillars = [
+  {
+    number: '01',
+    title: 'Seleccionamos las mejores propiedades para ti',
+    text: 'No trabajamos con cualquier propiedad. Analizamos cada inmueble para ofrecer oportunidades con verdadero potencial en el mercado.',
+  },
+  {
+    number: '02',
+    title: 'No dejamos tu propiedad en el olvido',
+    text: 'Mantenemos cada inmueble en movimiento con estrategias constantes: ajustamos, renovamos y probamos nuevas formas de llegar al comprador indicado.',
+  },
+  {
+    number: '03',
+    title: 'Trabajamos en equipo',
+    text: 'Detrás de cada operación hay profesionales que trabajan juntos para acompañarte y lograr el mejor resultado posible.',
+  },
+];
+---
+
+<section id="equipo" class="section-x section-y">
+  <div class="container-site flex flex-col gap-16">
+    <div class="grid gap-16 lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="flex flex-col gap-4">
+        <h2
+          class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[46px]"
+        >
+          Detrás de cada operación hay un equipo con criterio
+        </h2>
+
+        <p class="text-[16px] leading-5 text-heading">
+          Creemos que comprar o vender un inmueble es una de las decisiones más importantes en la
+          vida de una persona, y por eso pensamos que merece algo más que un aviso publicado en
+          internet.
+        </p>
+
+        <p class="text-[16px] leading-5 text-heading">
+          En Daniel Inmuebles trabajamos como un equipo que analiza, selecciona y comercializa
+          propiedades con criterio. No buscamos llenar un catálogo; preferimos ofrecer inmuebles que
+          realmente representen una buena oportunidad para compradores y propietarios.
+        </p>
+
+        <p class="text-[16px] leading-5 text-heading">
+          Nos caracteriza una comunicación clara, cercana y transparente. Acompañamos cada proceso
+          de principio a fin porque nuestro objetivo no es solo cerrar una venta, sino ayudar a que
+          nuestros clientes tomen una buena decisión.
+        </p>
+      </div>
+
+      <!--
+        En Figma este espacio está reservado para la foto editorial del equipo
+        (todavía sin imagen definitiva). Sustituir el <div> por un <img>.
+      -->
+      <div class="h-[407px] rounded-(--radius-card) bg-navy-920 p-[14px]">
+        <div class="relative flex size-full items-end rounded-(--radius-button) bg-white/5 p-5">
+          <p class="rounded-(--radius-chip) bg-navy-920 px-3 py-2 text-[12px] font-semibold text-white">
+            Foto editorial · Daniel y equipo
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-6 md:flex-row md:justify-center">
+      {
+        pillars.map((pillar) => (
+          <div class="flex flex-1 flex-col gap-2.5 rounded-(--radius-field) bg-card p-8 text-fg">
+            <p class="font-display text-[34px] leading-[34px] font-extrabold">
+              {pillar.number}
+            </p>
+            <h3 class="text-[21px] leading-[27.3px] font-semibold text-accent">
+              {pillar.title}
+            </h3>
+            <p class="text-[16px] leading-5">{pillar.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

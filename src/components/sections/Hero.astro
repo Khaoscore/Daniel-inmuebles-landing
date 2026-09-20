@@ -1,0 +1,41 @@
+---
+import Button from '../ui/Button.astro';
+import { BRAND, WHATSAPP_URL } from '../../data/site';
+
+/** Figma: nodos 163:4259 (claro) y 149:950 (oscuro). */
+---
+
+<section class="section-x flex items-center justify-center py-[76px]">
+  <!--
+    En Figma el bloque mide 900px con 32px de padding. El shaping de texto del
+    navegador es ~1.5% más ancho que el de Figma, así que damos 900px útiles
+    (964 - 2×32) para conservar el salto de línea del diseño en tres líneas.
+  -->
+  <div class="flex w-full max-w-[964px] flex-col items-center gap-[25.5px] p-8">
+    <div class="flex flex-col items-center text-center font-semibold text-fg">
+      <p class="text-[20px] leading-[22px]">{BRAND.legalName}</p>
+      <p class="text-[22px] leading-9 tracking-[-0.64px] sm:text-[32px]">{BRAND.instagram}</p>
+    </div>
+
+    <h1
+      class="font-display text-center text-[40px] leading-[1.02] font-extrabold tracking-[-0.03em] text-fg md:text-[56px] xl:text-[76px] xl:leading-[74.48px]"
+    >
+      Nos emociona ayudarte con la decisión más importante de tu vida
+    </h1>
+
+    <p class="font-body max-w-[620px] text-center text-[19px] leading-[30.4px] text-fg">
+      Aquí encontrarás los mejores inmuebles con la mejor calidad.
+    </p>
+
+    <div
+      class="flex w-full flex-col items-stretch justify-center gap-4 sm:w-auto sm:flex-row sm:items-start"
+    >
+      <Button href={WHATSAPP_URL} variant="primary" size="lg" icon="whatsapp" external>
+        Quiero vender mi inmueble
+      </Button>
+      <Button href="/propiedades" variant="outline" size="lg" icon="east">
+        Ver propiedades
+      </Button>
+    </div>
+  </div>
+</section>

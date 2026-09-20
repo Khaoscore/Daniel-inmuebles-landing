@@ -1,0 +1,73 @@
+---
+import ThemedIcon from './ThemedIcon.astro';
+import type { ThemedIconName } from '../../data/icons';
+
+/**
+ * Botón / enlace de acción. Variantes de "Single page 2":
+ *  - primary  : navy en claro, blanco en oscuro ("Quiero vender mi inmueble")
+ *  - outline  : borde del color del texto ("Ver propiedades")
+ *  - soft     : fondo blanco en ambos modos ("Ver todas las propiedades")
+ *  - cta      : amarillo en claro, blanco en oscuro ("Valoración gratuita")
+ *  - feature  : botón de la tarjeta "Comprar"
+ *  - contrast : botón de la tarjeta "Vender"
+ */
+type Variant = 'primary' | 'outline' | 'soft' | 'cta' | 'feature' | 'contrast';
+
+interface Props {
+  href: string;
+  variant?: Variant;
+  size?: 'md' | 'lg';
+  icon?: 'whatsapp' | 'east' | null;
+  external?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon = null,
+  external = false,
+  class: className = '',
+} = Astro.props;
+
+const variants: Record<Variant, string> = {
+  primary: 'bg-btn text-btn-fg font-bold hover:opacity-90',
+  outline: 'border-2 border-line text-fg font-semibold hover:bg-fg/5',
+  soft: 'bg-white text-cta-fg font-bold hover:opacity-80',
+  cta: 'bg-cta text-cta-fg font-bold hover:opacity-90',
+  feature: 'bg-feature-btn text-white font-semibold hover:opacity-90',
+  contrast: 'bg-contrast-btn text-contrast-btn-fg font-bold hover:opacity-90',
+};
+
+// Cada combinación variante + icono usa la variante del SVG exportada de Figma.
+const iconFor: Record<Variant, Record<'whatsapp' | 'east', ThemedIconName>> = {
+  primary: { whatsapp: 'wa-btn', east: 'east-soft' },
+  outline: { whatsapp: 'wa-btn', east: 'east-outline' },
+  soft: { whatsapp: 'wa-btn', east: 'east-soft' },
+  cta: { whatsapp: 'wa-contrast', east: 'east-soft' },
+  feature: { whatsapp: 'wa-btn', east: 'east-white' },
+  contrast: { whatsapp: 'wa-contrast', east: 'east-soft' },
+};
+
+const sizes = {
+  md: 'px-[26px] py-4 text-[17px] rounded-(--radius-pill)',
+  lg: 'min-h-16 px-[30px] py-[18px] text-[18px] rounded-(--radius-button)',
+};
+---
+
+<a
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  class:list={[
+    // En móvil el texto puede partirse: algunos botones no caben dentro de las tarjetas
+    'inline-flex items-center justify-center gap-4 text-center transition-opacity sm:whitespace-nowrap',
+    variants[variant],
+    sizes[size],
+    className,
+  ]}
+>
+  <slot />
+  {icon && <ThemedIcon name={iconFor[variant][icon]} />}
+</a>

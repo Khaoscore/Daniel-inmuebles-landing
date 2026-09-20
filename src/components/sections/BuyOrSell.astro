@@ -1,0 +1,69 @@
+---
+import Button from '../ui/Button.astro';
+import { WHATSAPP_URL } from '../../data/site';
+
+/** Figma: nodos 163:4316 (claro) y 149:1009 (oscuro). */
+---
+
+<section id="comprar-vender" class="section-x section-y">
+  <div class="container-site flex flex-col gap-4">
+    <h2
+      class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]"
+    >
+      ¿Vas a comprar o a vender?
+    </h2>
+
+    <!-- En el Figma claro este párrafo quedó blanco sobre blanco; se usa el color de texto del modo -->
+    <p class="max-w-[560px] text-[16px] leading-5 text-fg">
+      Elige tu camino. En cualquiera de los dos hay una persona del equipo acompañándote <strong
+        class="font-semibold">de principio a fin.</strong
+      >
+    </p>
+
+    <div class="flex flex-col gap-6 pt-8 lg:flex-row lg:justify-center">
+      <!-- 01 · Comprar -->
+      <div
+        class="flex flex-1 flex-col justify-between gap-6 rounded-(--radius-card) bg-feature p-8 text-feature-fg md:p-11"
+      >
+        <p class="text-[12px] font-semibold text-feature-label">01 · Comprar</p>
+
+        <h3 class="text-[28px] leading-9 font-semibold tracking-[-0.72px] md:text-[36px]">
+          Encuentra un inmueble que valga la pena
+        </h3>
+
+        <p class="text-[16px] leading-5">
+          Explora el catálogo con filtros por zona, tipo y precio, y ubica cada propiedad en el
+          mapa. Te acompañamos en cada paso para que compres con confianza y seguridad.
+        </p>
+
+        <div>
+          <Button href="/propiedades" variant="feature" icon="east">
+            Abrir catálogo de propiedades
+          </Button>
+        </div>
+      </div>
+
+      <!-- 02 · Vender -->
+      <div
+        class="flex flex-1 flex-col justify-between gap-6 overflow-hidden rounded-(--radius-card) bg-contrast p-8 text-white md:p-11"
+      >
+        <p class="text-[12px] font-semibold">02 · Vender · Servicio bandera</p>
+
+        <h3 class="text-[28px] leading-9 font-semibold tracking-[-0.72px] md:text-[36px]">
+          Vende con una estrategia, no con un aviso
+        </h3>
+
+        <p class="text-[16px] leading-5">
+          No se trata solo de publicar un inmueble. Diseñamos una estrategia de comercialización,
+          analizamos el mercado y te acompañamos hasta lograr la mejor negociación posible.
+        </p>
+
+        <div>
+          <Button href={WHATSAPP_URL} variant="contrast" icon="whatsapp" external>
+            Hablar por WhatsApp
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import FeaturedProperties from '../components/sections/FeaturedProperties.astro';
+import BuyOrSell from '../components/sections/BuyOrSell.astro';
+import About from '../components/sections/About.astro';
+import Services from '../components/sections/Services.astro';
+import Stats from '../components/sections/Stats.astro';
+import MapSection from '../components/sections/MapSection.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Faq from '../components/sections/Faq.astro';
+import ValuationCta from '../components/sections/ValuationCta.astro';
+---
+
+<BaseLayout
+  title="Daniel Inmuebles — Compra y venta de inmuebles en Bogotá"
+  description="Te acompañamos en la decisión más importante de tu vida. Comercializamos propiedades en el norte de Bogotá con estrategia, criterio y acompañamiento de principio a fin."
+>
+  <Hero />
+  <FeaturedProperties />
+  <BuyOrSell />
+  <About />
+  <Services />
+  <Stats />
+  <MapSection tone="home" />
+  <Testimonials />
+  <Faq />
+  <ValuationCta />
+</BaseLayout>

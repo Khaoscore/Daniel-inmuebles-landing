@@ -1,0 +1,53 @@
+---
+/** Figma: nodos 163:4638 (claro) y 149:1331 (oscuro). */
+
+const testimonials = [
+  {
+    quote:
+      'Desde el primer momento hasta la firma final, me acompañaron en todo el proceso. Siempre estuvieron pendientes, resolvieron mis dudas y me brindaron la asesoría que necesitaba.',
+    name: 'Tatiana Rivera',
+    role: 'Compradora · Cedritos',
+  },
+  {
+    quote:
+      'Quedé muy satisfecho con el resultado. Lograron vender mi inmueble rápidamente y se encargaron de todo el proceso de manera profesional y eficiente. Sin duda, volvería a confiar en ellos.',
+    name: 'Sebastián Ocampo',
+    role: 'Vendedor · Santa Bárbara',
+  },
+  {
+    quote:
+      'Primero me ayudaron a encontrar el inmueble que realmente necesitaba y después me ayudaron a vender mi propiedad. Tener todo el proceso en un mismo lugar fue mucho más fácil y confiable.',
+    name: 'Juan Carlos Patiño',
+    role: 'Comprador y Vendedor · Usaquén',
+  },
+];
+---
+
+<section id="testimonios" class="section-x section-y">
+  <div class="container-site flex flex-col gap-3">
+    <h2
+      class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]"
+    >
+      Lo que dicen quienes ya decidieron
+    </h2>
+
+    <div class="flex flex-col gap-6 pt-8 md:flex-row md:justify-center">
+      {
+        testimonials.map((testimonial) => (
+          <figure class="flex flex-1 flex-col gap-[26px] rounded-(--radius-panel) bg-card p-[34px]">
+            <blockquote class="text-[19px] leading-[28.5px] font-medium text-fg">
+              “{testimonial.quote}”
+            </blockquote>
+
+            <figcaption class="flex flex-col gap-0.5">
+              <span class="text-[16px] leading-5 font-semibold text-quote-name">
+                {testimonial.name}
+              </span>
+              <span class="text-[12px] font-semibold text-quote-role">{testimonial.role}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</section>

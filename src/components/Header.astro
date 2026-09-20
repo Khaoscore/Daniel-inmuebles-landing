@@ -1,0 +1,58 @@
+---
+import MobileNav from './react/MobileNav.tsx';
+import ThemeToggle from './react/ThemeToggle.tsx';
+import ThemedIcon from './ui/ThemedIcon.astro';
+import { NAV_LINKS, WHATSAPP_URL } from '../data/site';
+
+/** Figma: nodos 217:643 (claro) y 163:3855 (oscuro). */
+
+const currentPath = Astro.url.pathname;
+const isActive = (href: string) => !href.includes('#') && currentPath.startsWith(href);
+---
+
+<header class="section-x sticky top-0 z-50 w-full border-b border-header-border bg-header">
+  <div class="container-site flex min-h-[76px] items-center justify-between gap-4 py-[14.75px]">
+    <div class="flex items-center gap-12">
+      <a
+        href="/"
+        class="font-display text-[22px] font-extrabold tracking-[-0.44px] whitespace-nowrap text-fg"
+      >
+        Daniel Inmuebles
+      </a>
+
+      <nav aria-label="Navegación principal" class="hidden items-center gap-[23px] md:flex">
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              aria-current={isActive(link.href) ? 'page' : undefined}
+              class:list={[
+                'text-[15px] font-medium whitespace-nowrap text-fg transition-opacity hover:opacity-70',
+                isActive(link.href) && 'underline decoration-2 underline-offset-8',
+              ]}
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="hidden items-center justify-center gap-3 rounded-(--radius-button) bg-btn px-5 py-[14px] text-[16px] font-bold whitespace-nowrap text-btn-fg transition-opacity hover:opacity-90 lg:flex"
+      >
+        Quiero vender mi inmueble
+        <ThemedIcon name="wa-header" />
+      </a>
+
+      <!-- Botón día / noche: no está en Figma, se agrega a pedido del cliente -->
+      <ThemeToggle client:load />
+
+      <MobileNav client:load links={NAV_LINKS} whatsappUrl={WHATSAPP_URL} />
+    </div>
+  </div>
+</header>

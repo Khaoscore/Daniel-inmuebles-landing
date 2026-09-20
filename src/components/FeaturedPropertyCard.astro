@@ -1,0 +1,48 @@
+---
+import { formatPriceShort, type Property } from '../data/properties';
+
+/**
+ * Tarjeta grande del bloque "Propiedades destacadas".
+ * Figma: nodos 163:4284 (claro) y 149:977 (oscuro).
+ */
+interface Props {
+  property: Property;
+}
+
+const { property } = Astro.props;
+const href = `/propiedades/${property.slug}`;
+
+// El bloque de destacadas usa su propia foto en el diseño.
+const image = property.featuredImage ?? property.image;
+---
+
+<article class="flex h-[449px] flex-1 flex-col overflow-hidden rounded-(--radius-panel) bg-card">
+  <a href={href} class="min-h-0 flex-1 overflow-hidden">
+    <img
+      src={image}
+      alt={`${property.title} en ${property.neighborhood}`}
+      width="384"
+      height="290"
+      loading="lazy"
+      decoding="async"
+      class="size-full object-cover transition-transform duration-300 hover:scale-105"
+    />
+  </a>
+
+  <div class="flex flex-col gap-3 p-6 text-fg">
+    <div class="flex items-baseline justify-between gap-4">
+      <h3 class="text-[20px] font-bold">
+        <a href={href} class="transition-opacity hover:opacity-70">{property.title}</a>
+      </h3>
+      <span class="text-[12px] font-semibold whitespace-nowrap">{property.neighborhood}</span>
+    </div>
+
+    <p class="font-display text-[32px] font-bold text-accent">
+      {formatPriceShort(property.price)}
+    </p>
+
+    <p class="text-[12px] font-semibold">
+      {property.area} m² · {property.bedrooms} hab · {property.bathrooms} baños
+    </p>
+  </div>
+</article>

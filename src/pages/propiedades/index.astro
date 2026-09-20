@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PropertySearch from '../../components/react/PropertySearch.tsx';
+import MapSection from '../../components/sections/MapSection.astro';
+import { PROPERTIES } from '../../data/properties';
+import { BRAND } from '../../data/site';
+
+/** Figma: nodos 163:4744 (claro) y 152:2414 (oscuro). */
+---
+
+<BaseLayout
+  title="Busca tu inmueble ideal en Bogotá — Daniel Inmuebles"
+  description="Busca apartamentos, casas y oficinas en el norte de Bogotá por zona, habitaciones, baños y precio, o describe con tus palabras lo que necesitas."
+>
+  <section class="section-x py-[70px]">
+    <div class="container-site flex flex-col gap-[25.5px]">
+      <div class="flex flex-col items-center gap-[25.5px] px-8 text-center text-fg">
+        <div class="flex flex-col items-center font-semibold">
+          <p class="text-[20px] leading-[22px]">{BRAND.legalName}</p>
+          <p class="text-[22px] leading-9 tracking-[-0.64px] sm:text-[32px]">{BRAND.instagram}</p>
+        </div>
+
+        <div class="flex flex-col items-center gap-2">
+          <h1
+            class="font-display text-[40px] leading-[1.02] font-extrabold tracking-[-0.03em] md:text-[56px] xl:text-[76px] xl:leading-[74.48px]"
+          >
+            Busca tu inmueble ideal
+          </h1>
+          <p class="font-body text-[19px] leading-[30.4px]">
+            Describe lo que buscas por características, ubicación, precio, etc.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-8">
+        <PropertySearch client:load properties={PROPERTIES} />
+      </div>
+    </div>
+  </section>
+
+  <!-- En Figma el mapa lleva "Ver todas las propiedades"; aquí sobra porque ya estamos en esa página -->
+  <MapSection showCta={false} />
+</BaseLayout>

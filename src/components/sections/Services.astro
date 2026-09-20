@@ -1,0 +1,75 @@
+---
+import { WHATSAPP_URL } from '../../data/site';
+
+/** Figma: nodos 163:4390 (claro) y 149:1083 (oscuro). */
+
+const services = [
+  {
+    title: 'Comprar un inmueble',
+    text: 'Encontramos propiedades que representen una buena oportunidad y te acompañamos en cada paso.',
+  },
+  {
+    title: 'Conocer el valor de mi propiedad',
+    text: 'Valoración comercial basada en el comportamiento del mercado para definir un precio competitivo.',
+  },
+  {
+    title: 'Asesoría inmobiliaria',
+    text: 'Si no sabes por dónde empezar, te orientamos para evitar errores que cuestan tiempo y dinero.',
+  },
+  {
+    title: 'Acompañamiento integral',
+    text: 'Desde la negociación hasta la escrituración, el equipo está presente en cada etapa.',
+  },
+];
+---
+
+<section id="servicios" class="section-x section-y">
+  <div class="container-site flex flex-col gap-4">
+    <h2
+      class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]"
+    >
+      Cinco formas de trabajar juntos
+    </h2>
+
+    <div class="grid gap-5 pt-8 md:grid-cols-2 lg:grid-cols-3">
+      <!-- Servicio bandera: ocupa dos columnas -->
+      <div
+        class="flex flex-col justify-between gap-7 rounded-(--radius-card) bg-spot p-8 text-spot-fg md:col-span-2 md:p-10"
+      >
+        <div class="flex flex-col gap-3">
+          <!-- En el Figma oscuro esta etiqueta queda blanca sobre blanco; se usa el color del texto de la tarjeta -->
+          <p class="text-[12px] font-semibold">Destacado</p>
+
+          <h3 class="text-[28px] leading-9 font-semibold tracking-[-0.72px] md:text-[36px]">
+            Vender mi inmueble
+          </h3>
+
+          <p class="font-body max-w-[520px] text-[16px] leading-[26.4px]">
+            Estrategia de comercialización, análisis de mercado y acompañamiento hasta la mejor
+            negociación posible.
+          </p>
+        </div>
+
+        <div>
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-block border-b-[1.5px] border-spot-link pb-1 text-[17px] font-semibold text-spot-link transition-opacity hover:opacity-70"
+          >
+            Empezar por WhatsApp →
+          </a>
+        </div>
+      </div>
+
+      {
+        services.map((service) => (
+          <div class="flex flex-col gap-3 rounded-(--radius-card) bg-card px-8 py-9 text-heading">
+            <h3 class="text-[23px] leading-[28.75px] font-semibold">{service.title}</h3>
+            <p class="font-body text-[15px] leading-6">{service.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
