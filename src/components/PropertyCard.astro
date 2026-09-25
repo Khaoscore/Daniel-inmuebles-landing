@@ -23,10 +23,10 @@ const href = `/propiedades/${property.slug}`;
     className,
   ]}
 >
-  <a href={href} class="block h-[177px] overflow-hidden rounded-[11px]">
+  <a href={href} class="block h-[177px] overflow-hidden rounded-[11px] bg-fg/5">
     <img
-      src={property.image}
-      alt={`${property.title} en ${property.neighborhood}`}
+      src={property.cover}
+      alt={property.title}
       width="236"
       height="177"
       loading="lazy"
@@ -40,7 +40,7 @@ const href = `/propiedades/${property.slug}`;
       <h3 class="text-[16px] leading-5">
         <a href={href} class="transition-opacity hover:opacity-70">{property.title}</a>
       </h3>
-      <span class="text-[12px] whitespace-nowrap">{property.type}</span>
+      {property.type && <span class="text-[12px] whitespace-nowrap">{property.type}</span>}
     </div>
 
     <p class="text-[14px] leading-[22px]">{formatPropertyMeta(property)}</p>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+
+// También se muestra cuando una propiedad se elimina de Supabase.
+---
+
+<BaseLayout title="Página no encontrada — Daniel Inmuebles">
+  <section class="section-x flex min-h-[60vh] items-center justify-center py-[76px]">
+    <div class="flex max-w-[640px] flex-col items-center gap-6 text-center text-fg">
+      <p class="font-display text-[64px] leading-none font-extrabold text-accent md:text-[96px]">404</p>
+      <h1 class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] md:text-[44px]">
+        Este inmueble ya no está disponible
+      </h1>
+      <p class="text-[18px] leading-7">
+        Puede que se haya vendido o que el enlace haya cambiado. Mira las propiedades que tenemos
+        hoy.
+      </p>
+      <Button href="/propiedades" variant="primary" size="lg" icon="east">
+        Ver propiedades
+      </Button>
+    </div>
+  </section>
+</BaseLayout>

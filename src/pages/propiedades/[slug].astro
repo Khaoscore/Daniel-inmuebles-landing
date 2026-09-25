@@ -3,89 +3,117 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PropertyGallery from '../../components/react/PropertyGallery.tsx';
 import ThemedIcon from '../../components/ui/ThemedIcon.astro';
 import MapSection from '../../components/sections/MapSection.astro';
+import { getProperties, getPropertyById, getPropertyImages, idFromSlug } from '../../lib/catalog';
 import {
-  AMENITY_LABELS,
-  AREA_OVERRIDES,
-  PROPERTIES,
+  PLACEHOLDER_IMAGE,
+  formatNumber,
   formatPriceFull,
-  type Amenities,
-  type Property,
+  instagramEmbedUrl,
+  whatsappPropertyUrl,
 } from '../../data/properties';
 
-/** Figma: nodos 163:5218 (claro) y 149:1947 (oscuro). */
+/**
+ * Ficha de detalle. Figma: nodos 163:5218 (claro) y 149:1947 (oscuro).
+ *
+ * Se renderiza en cada visita a partir de Supabase: si la fila se elimina,
+ * la URL pasa a dar 404; si se agrega, su ficha existe de inmediato.
+ */
 
-export function getStaticPaths() {
-  return PROPERTIES.map((property) => ({
-    params: { slug: property.slug },
-    props: { property },
-  }));
+const id = idFromSlug(Astro.params.slug);
+const property = id !== null ? await getPropertyById(id) : null;
+
+if (!property) {
+  return Astro.rewrite('/404');
 }
 
-interface Props {
-  property: Property;
+// Si cambia el tipo o el barrio en la BD, la URL vieja lleva a la nueva.
+if (Astro.params.slug !== property.slug) {
+  return Astro.redirect(`/propiedades/${property.slug}`, 301);
 }
 
-const { property } = Astro.props;
+const [images, allProperties] = await Promise.all([
+  getPropertyImages(property),
+  getProperties().catch(() => []),
+]);
 
-const images = property.gallery?.length ? property.gallery : [property.image];
+// Cercanas: la propiedad actual primero (para el mapa) y luego las de su zona.
+const others = allProperties.filter((p) => p.id !== property.id && !p.unavailable);
+const sameZone = others.filter((p) => property.zone && p.zone === property.zone);
+const nearby = [property, ...(sameZone.length > 0 ? sameZone : others).slice(0, 11)];
 
-// Solo se muestran las celdas con dato: el resto llegará con la base de datos.
-const specs = [
-  { label: 'Área', value: AREA_OVERRIDES[property.id] ?? `${property.area} m²` },
-  { label: 'Habitaciones', value: String(property.bedrooms) },
-  { label: 'Baños', value: String(property.bathrooms) },
+/** Valores más largos que esto van a la lista de detalles, no a una celda. */
+const MAX_CELL_LENGTH = 32;
+
+const fields = [
+  { label: 'Área', value: property.areaText },
+  { label: 'Habitaciones', value: property.bedroomsText },
+  { label: 'Baños', value: property.bathrooms !== null ? formatNumber(property.bathrooms) : null },
+  { label: 'Estrato', value: property.stratum !== null ? String(property.stratum) : null },
   { label: 'Antigüedad', value: property.age },
-  { label: 'Estrato', value: String(property.stratum) },
-  { label: 'Parqueadero', value: String(property.parking) },
-  { label: 'Pisos', value: property.floors ? String(property.floors) : undefined },
-  {
-    label: 'Impuesto predial',
-    value: property.propertyTax ? formatPriceFull(property.propertyTax) : undefined,
-  },
+  { label: 'Parqueadero', value: property.parking },
+  { label: 'Piso', value: property.floor },
   {
     label: 'Administración',
-    value: property.adminFee ? property.adminFee.toLocaleString('es-CO') : undefined,
+    value: property.adminFee !== null ? formatPriceFull(property.adminFee) : null,
   },
-].filter((spec): spec is { label: string; value: string } => Boolean(spec.value));
+  { label: 'Balcón / Terraza', value: property.balcony },
+  { label: 'Depósito', value: property.deposit },
+  { label: 'Ascensor', value: property.elevator },
+  { label: 'Tipo', value: property.type },
+  { label: 'Zona', value: property.zone },
+  { label: 'Barrio', value: property.neighborhood },
+].filter((field): field is { label: string; value: string } => Boolean(field.value));
 
-const amenities = Object.entries(property.amenities ?? {})
-  .filter(([, enabled]) => enabled)
-  .map(([key]) => AMENITY_LABELS[key as keyof Amenities]);
+const specs = fields.filter((field) => field.value.length <= MAX_CELL_LENGTH);
+const longDetails = fields.filter((field) => field.value.length > MAX_CELL_LENGTH);
 
-const listingLabel = property.listingLabel ?? `Venta de ${property.type.toLowerCase()}`;
+const listingLabel = `Venta de ${(property.type ?? 'inmueble').toLowerCase()}`;
+const location = [...new Set([property.neighborhood, property.zone].filter(Boolean))].join(', ');
+const instagramEmbed = instagramEmbedUrl(property.instagramUrl);
+const whatsappUrl = whatsappPropertyUrl(property);
+
+const description = [
+  `${listingLabel}${location ? ` en ${location}` : ''}, Bogotá.`,
+  property.areaText && `${property.areaText}.`,
+  property.bedrooms !== null && `${property.bedrooms} habitaciones.`,
+  property.bathrooms !== null && `${formatNumber(property.bathrooms)} baños.`,
+  property.price !== null && `Precio: ${formatPriceFull(property.price)}.`,
+]
+  .filter(Boolean)
+  .join(' ');
 
 // Datos estructurados para buscadores e inmobiliarias agregadoras.
 const listingSchema = {
   '@context': 'https://schema.org',
   '@type': 'RealEstateListing',
   name: property.title,
+  description: property.description ?? description,
   url: new URL(`/propiedades/${property.slug}`, Astro.site).toString(),
-  datePosted: new Date().toISOString().split('T')[0],
+  image: images.slice(0, 5).map((image) => image.full),
   offers: {
     '@type': 'Offer',
-    price: property.price,
+    price: property.price ?? undefined,
     priceCurrency: 'COP',
-    availability:
-      property.status === 'disponible'
-        ? 'https://schema.org/InStock'
-        : 'https://schema.org/SoldOut',
+    availability: property.unavailable
+      ? 'https://schema.org/SoldOut'
+      : 'https://schema.org/InStock',
   },
   address: {
     '@type': 'PostalAddress',
-    addressLocality: property.neighborhood,
-    addressRegion: property.city,
+    addressLocality: property.neighborhood ?? undefined,
+    addressRegion: 'Bogotá',
     addressCountry: 'CO',
   },
-  numberOfBedrooms: property.bedrooms,
-  numberOfBathroomsTotal: property.bathrooms,
-  floorSize: { '@type': 'QuantitativeValue', value: property.area, unitCode: 'MTK' },
+  numberOfRooms: property.bedrooms ?? undefined,
+  numberOfBathroomsTotal: property.bathrooms ?? undefined,
+  floorSize:
+    property.area !== null
+      ? { '@type': 'QuantitativeValue', value: property.area, unitCode: 'MTK' }
+      : undefined,
 };
 ---
 
-<BaseLayout
-  title={`${property.title} — Daniel Inmuebles`}
-  description={`${listingLabel} en ${property.neighborhood}, ${property.city}. ${property.area} m², ${property.bedrooms} habitaciones y ${property.bathrooms} baños por ${formatPriceFull(property.price)}.`}
->
+<BaseLayout title={`${property.title} — Daniel Inmuebles`} description={description}>
   <section class="section-x pt-11 pb-6">
     <div class="container-site flex flex-col gap-2">
       <p class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.88px] text-heading md:text-[44px] md:leading-[46.2px]">
@@ -107,17 +135,34 @@ const listingSchema = {
 
   <section class="section-x pb-16">
     <div class="container-site flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-center">
-      <div class="flex-1">
+      <div class="min-w-0 flex-1">
         <PropertyGallery
           client:load
           images={images}
           alt={property.title}
           priceLabel={formatPriceFull(property.price)}
+          placeholder={PLACEHOLDER_IMAGE}
         />
       </div>
 
-      <div class="flex flex-1 flex-col gap-4 pt-1">
-        <p class="text-[16px] leading-5 font-semibold text-eyebrow">{listingLabel}</p>
+      <div class="flex min-w-0 flex-1 flex-col gap-4 pt-1">
+        <div class="flex flex-wrap items-center gap-3">
+          <p class="text-[16px] leading-5 font-semibold text-eyebrow">{listingLabel}</p>
+          {
+            property.code && (
+              <span class="rounded-md border border-line/25 px-2 py-1 text-[13px] font-semibold text-fg">
+                Código {property.code}
+              </span>
+            )
+          }
+          {
+            property.unavailable && property.status && (
+              <span class="rounded-md bg-brand-yellow px-2 py-1 text-[13px] font-bold text-navy-900 capitalize">
+                {property.status}
+              </span>
+            )
+          }
+        </div>
 
         <h1
           class="font-display text-[32px] leading-[1.05] font-extrabold tracking-[-0.96px] text-heading md:text-[48px] md:leading-[46px]"
@@ -125,65 +170,109 @@ const listingSchema = {
           {property.title}
         </h1>
 
-        <dl class="grid grid-cols-2 gap-2 text-center sm:grid-cols-3">
-          {
-            specs.map((spec) => (
-              <div
-                class="flex flex-col items-center justify-center gap-1 rounded-(--radius-chip) bg-spec px-6 py-4"
-              >
-                <dt class="text-[18px] leading-[22px] font-semibold text-spec-label md:text-[20px]">
-                  {spec.label}
-                </dt>
-                <dd class="text-[16px] leading-5 font-semibold text-spec-fg">{spec.value}</dd>
-              </div>
-            ))
-          }
-        </dl>
-
         {
-          property.highlights && property.highlights.length > 0 && (
-            <ul class="flex list-disc flex-col gap-4 pt-2 pl-6 text-[16px] leading-5 text-heading">
-              {property.highlights.map((highlight) => (
-                <li>
-                  <span class="font-semibold">{highlight.label}</span>
-                  <br />
-                  {highlight.text}
-                </li>
-              ))}
-            </ul>
-          )
-        }
-
-        {
-          property.closingNote && (
-            <p class="text-[22px] leading-9 font-semibold tracking-[-0.52px] text-eyebrow md:text-[26px]">
-              {property.closingNote}
+          (property.address || location) && (
+            <p class="text-[16px] leading-6 text-fg">
+              {property.address ? `${property.address} · ${location}` : location}
             </p>
           )
         }
+
+        {
+          specs.length > 0 && (
+            <dl class="grid grid-cols-2 gap-2 text-center sm:grid-cols-3">
+              {specs.map((spec) => (
+                <div class="flex flex-col items-center justify-center gap-1 rounded-(--radius-chip) bg-spec px-4 py-4">
+                  <dt class="text-[16px] leading-[22px] font-semibold text-spec-label md:text-[18px]">
+                    {spec.label}
+                  </dt>
+                  <dd class="text-[15px] leading-5 font-semibold text-spec-fg">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )
+        }
+
+        <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex flex-1 items-center justify-center gap-2 rounded-(--radius-pill) bg-btn px-[26px] py-4 text-[17px] font-bold text-btn-fg transition-opacity hover:opacity-90"
+          >
+            Agendar visita
+            <ThemedIcon name="wa-btn" class="size-6" />
+          </a>
+          {
+            property.instagramUrl && (
+              <a
+                href={property.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex flex-1 items-center justify-center rounded-(--radius-pill) border border-line/25 px-[26px] py-4 text-[17px] font-bold text-fg transition-colors hover:border-line"
+              >
+                Ver video en Instagram
+              </a>
+            )
+          }
+        </div>
       </div>
     </div>
   </section>
 
   {
-    amenities.length > 0 && (
+    (property.description || longDetails.length > 0 || instagramEmbed) && (
       <section class="section-x pb-16">
-        <div class="container-site grid grid-cols-1 gap-x-[30px] gap-y-[21px] sm:grid-cols-2 lg:grid-cols-3">
-          {amenities.map((amenity) => (
-            <div class="flex items-center justify-center gap-4 rounded-(--radius-chip) bg-spec p-4">
-              <ThemedIcon name={amenity.icon} class="size-6 object-contain" />
-              <p class="flex flex-col items-center gap-1 text-center text-[16px] leading-5 font-semibold">
-                <span class="text-spec-label">{amenity.label}</span>
-                <span class="text-spec-fg">Sí</span>
-              </p>
+        <div class="container-site flex flex-col gap-8 lg:flex-row lg:items-start">
+          {(property.description || longDetails.length > 0) && (
+            <div class="flex min-w-0 flex-1 flex-col gap-6 rounded-(--radius-panel) bg-card p-6 text-fg md:p-8">
+              <h2 class="font-display text-[28px] leading-[1.1] font-extrabold tracking-[-0.02em] text-heading md:text-[36px]">
+                Información del inmueble
+              </h2>
+
+              {property.description && (
+                <p class="text-[17px] leading-7 whitespace-pre-line">{property.description}</p>
+              )}
+
+              {longDetails.length > 0 && (
+                <dl class="flex flex-col gap-4">
+                  {longDetails.map((detail) => (
+                    <div>
+                      <dt class="text-[16px] font-semibold text-accent">{detail.label}</dt>
+                      <dd class="text-[16px] leading-6 whitespace-pre-line">{detail.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
-          ))}
+          )}
+
+          {instagramEmbed && (
+            <div class="mx-auto flex w-full max-w-[400px] flex-col gap-4 lg:mx-0">
+              <h2 class="font-display text-[28px] leading-[1.1] font-extrabold tracking-[-0.02em] text-heading md:text-[36px]">
+                Recorrido en video
+              </h2>
+              <iframe
+                src={instagramEmbed}
+                title={`Video de ${property.title} en Instagram`}
+                class="h-[640px] w-full rounded-(--radius-panel) border-0 bg-white"
+                loading="lazy"
+                allowtransparency="true"
+                allow="encrypted-media; picture-in-picture; web-share"
+              />
+            </div>
+          )}
         </div>
       </section>
     )
   }
 
-  <MapSection title="Ubicación y propiedades cercanas" showCta={false} />
+  <MapSection
+    properties={nearby}
+    primaryId={property.id}
+    title="Ubicación y propiedades cercanas"
+    showCta={false}
+  />
 </BaseLayout>
 
 <script is:inline type="application/ld+json" set:html={JSON.stringify(listingSchema)} />

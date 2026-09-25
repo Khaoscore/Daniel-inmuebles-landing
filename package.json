@@ -11,7 +11,9 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^9.5.5",
     "@astrojs/react": "^4.2.1",
+    "@supabase/supabase-js": "^2.117.1",
     "astro": "^5.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.0.9",
+    "@types/google.maps": "^3.66.3",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "tailwindcss": "^4.0.9",

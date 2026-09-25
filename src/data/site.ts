@@ -29,7 +29,7 @@ export interface NavLink {
 
 export const NAV_LINKS: NavLink[] = [
   { label: 'Propiedades', href: '/propiedades' },
-  { label: 'Sobre nosotros', href: '/#equipo' },
+  { label: 'Sobre nosotros', href: '/sobre-nosotros' },
 ];
 
 export const SOCIAL_LINKS = [
@@ -54,17 +54,17 @@ export const SOCIAL_LINKS = [
 
 /** Columna izquierda de enlaces del footer. */
 export const FOOTER_LINKS_PRIMARY: NavLink[] = [
-  { label: 'Propiedades destacadas', href: '/#destacadas' },
-  { label: 'Comprar o vender', href: '/#comprar-vender' },
-  { label: 'Sobre nosotros', href: '/#equipo' },
-  { label: 'Servicios', href: '/#servicios' },
+  { label: 'Propiedades destacadas', href: '/sobre-nosotros#destacadas' },
+  { label: 'Comprar o vender', href: '/sobre-nosotros#comprar-vender' },
+  { label: 'Sobre nosotros', href: '/sobre-nosotros' },
+  { label: 'Servicios', href: '/sobre-nosotros#servicios' },
 ];
 
 /** Columna derecha de enlaces del footer. */
 export const FOOTER_LINKS_SECONDARY: NavLink[] = [
-  { label: 'Propiedades destacadas', href: '/#destacadas' },
-  { label: 'Comprar o vender', href: '/#comprar-vender' },
-  { label: 'Sobre nosotros', href: '/#equipo' },
+  { label: 'Propiedades destacadas', href: '/sobre-nosotros#destacadas' },
+  { label: 'Comprar o vender', href: '/sobre-nosotros#comprar-vender' },
+  { label: 'Sobre nosotros', href: '/sobre-nosotros' },
 ];
 
 export const LEGAL_LINKS: NavLink[] = [

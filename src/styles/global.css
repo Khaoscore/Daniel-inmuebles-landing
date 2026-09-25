@@ -444,4 +444,78 @@
   .range-handle::-moz-range-track {
     background: transparent;
   }
+
+  /*
+    Pin de precio del mapa (ver createPriceMarker en src/lib/google-maps.ts).
+    Recuadro del color --c-pin con una punta abajo que marca la coordenada.
+  */
+  .map-pin {
+    position: absolute;
+    transform: translate(-50%, calc(-100% - 7px));
+    padding: 6px 10px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--c-pin);
+    color: var(--color-navy-900);
+    font: 700 14px/1 var(--font-sans);
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .map-pin::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    translate: -50% 0;
+    border: 7px solid transparent;
+    border-bottom: 0;
+    border-top-color: var(--c-pin);
+  }
+
+  .map-pin:hover,
+  .map-pin[data-active='true'] {
+    z-index: 1;
+    transform: translate(-50%, calc(-100% - 7px)) scale(1.1);
+  }
+
+  .map-pin[data-active='true'] {
+    background: var(--c-map-chip);
+    color: #fff;
+  }
+
+  .map-pin[data-active='true']::after {
+    border-top-color: var(--c-map-chip);
+  }
+
+  /* Propiedad de la ficha: azul, con casita y por encima de las cercanas. */
+  .map-pin[data-variant='primary'] {
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: var(--color-blue-500);
+    color: #fff;
+    font-size: 15px;
+  }
+
+  .map-pin[data-variant='primary']::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3 2 12h3v8h5v-6h4v6h5v-8h3z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+
+  .map-pin[data-variant='primary']::after {
+    border-top-color: var(--color-blue-500);
+  }
+
+  .map-pin[data-variant='primary'][data-active='true'] {
+    outline: 3px solid var(--color-brand-yellow);
+  }
 }
