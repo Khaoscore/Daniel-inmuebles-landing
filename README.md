@@ -293,10 +293,21 @@ una propiedad a la vez.
 | `PUBLIC_GOOGLE_MAPS_API_KEY` | Sí | Maps JavaScript API |
 | `GOOGLE_MAPS_SERVER_KEY` | No | Geocoding API |
 
-**Despliegue**: `npm run build` y `node dist/server/entry.mjs`. Para Vercel o
-Netlify, cambiar el adaptador en `astro.config.mjs` por `@astrojs/vercel` o
-`@astrojs/netlify`; en ese caso, las cachés en memoria (ver abajo) se pierden
-en cada arranque en frío.
+### Despliegue
+
+`astro.config.mjs` elige el adaptador según dónde se compila:
+
+- **Vercel** (define `VERCEL=1` al compilar): `@astrojs/vercel`. Las páginas
+  corren como una función serverless (Node 22). Framework preset: Astro, sin
+  cambiar el comando de build ni el directorio de salida.
+- **Local o servidor propio**: `@astrojs/node` standalone.
+  `npm run build` y `node dist/server/entry.mjs` (variables `PORT` y `HOST`).
+
+En Vercel, las variables de la tabla de arriba se cargan en **Settings →
+Environment Variables** para Production y Preview. Las `PUBLIC_*` se incrustan
+al compilar, así que después de agregarlas o cambiarlas hay que volver a
+desplegar. En serverless, las cachés en memoria (ver abajo) se pierden en cada
+arranque en frío.
 
 ### Cachés
 

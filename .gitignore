@@ -1,6 +1,7 @@
 # Build
 dist/
 .astro/
+.vercel/
 
 # Dependencias
 node_modules/
