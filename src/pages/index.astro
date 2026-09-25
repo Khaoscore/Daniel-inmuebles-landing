@@ -1,29 +1,72 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/sections/Hero.astro';
-import FeaturedProperties from '../components/sections/FeaturedProperties.astro';
-import BuyOrSell from '../components/sections/BuyOrSell.astro';
-import About from '../components/sections/About.astro';
-import Services from '../components/sections/Services.astro';
-import Stats from '../components/sections/Stats.astro';
+import PropertySearch from '../components/react/PropertySearch.tsx';
 import MapSection from '../components/sections/MapSection.astro';
-import Testimonials from '../components/sections/Testimonials.astro';
-import Faq from '../components/sections/Faq.astro';
-import ValuationCta from '../components/sections/ValuationCta.astro';
+import { getProperties } from '../lib/catalog';
+import type { Property } from '../data/properties';
+import { BRAND, WHATSAPP_URL } from '../data/site';
+
+/** Figma: nodos 163:4744 (claro) y 152:2414 (oscuro). */
+
+// Se consulta Supabase en cada visita: lo que se agrega o elimina en la base
+// de datos se ve aquí en la siguiente recarga.
+let properties: Property[] = [];
+let failed = false;
+try {
+  properties = await getProperties();
+} catch (error) {
+  console.error(error);
+  failed = true;
+}
 ---
 
 <BaseLayout
-  title="Daniel Inmuebles — Compra y venta de inmuebles en Bogotá"
-  description="Te acompañamos en la decisión más importante de tu vida. Comercializamos propiedades en el norte de Bogotá con estrategia, criterio y acompañamiento de principio a fin."
+  title="Busca tu inmueble ideal en Bogotá — Daniel Inmuebles"
+  description="Busca apartamentos y casas en Bogotá por zona, habitaciones, baños y precio, o describe con tus palabras lo que necesitas."
 >
-  <Hero />
-  <FeaturedProperties />
-  <BuyOrSell />
-  <About />
-  <Services />
-  <Stats />
-  <MapSection tone="home" />
-  <Testimonials />
-  <Faq />
-  <ValuationCta />
+  <section id="buscar" class="section-x scroll-mt-24 py-[70px]">
+    <div class="container-site flex flex-col gap-[25.5px]">
+      <div class="flex flex-col items-center gap-[25.5px] px-8 text-center text-fg">
+        <div class="flex flex-col items-center font-semibold">
+          <p class="text-[20px] leading-[22px]">{BRAND.legalName}</p>
+          <p class="text-[22px] leading-9 tracking-[-0.64px] sm:text-[32px]">{BRAND.instagram}</p>
+        </div>
+
+        <div class="flex flex-col items-center gap-2">
+          <h1
+            class="font-display text-[40px] leading-[1.02] font-extrabold tracking-[-0.03em] md:text-[56px] xl:text-[76px] xl:leading-[74.48px]"
+          >
+            Busca tu inmueble ideal
+          </h1>
+          <p class="font-body text-[19px] leading-[30.4px]">
+            Describe lo que buscas por características, ubicación, precio, etc.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-8">
+        {
+          failed ? (
+            <div class="rounded-(--radius-field) bg-card p-10 text-center text-fg">
+              <p class="text-[19px] font-semibold">
+                No pudimos cargar las propiedades en este momento.
+              </p>
+              <p class="mt-2 text-[16px] leading-5">
+                Recarga la página en unos segundos o{' '}
+                <a href={WHATSAPP_URL} class="underline" target="_blank" rel="noopener noreferrer">
+                  escríbenos por WhatsApp
+                </a>
+                .
+              </p>
+            </div>
+          ) : (
+            <PropertySearch client:load properties={properties} />
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- El botón del mapa sube al buscador en vez de recargar la página -->
+  <MapSection properties={properties} ctaHref="#buscar" />
 </BaseLayout>

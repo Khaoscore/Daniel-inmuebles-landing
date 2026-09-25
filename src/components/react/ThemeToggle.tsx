@@ -5,7 +5,7 @@ export type Theme = 'light' | 'dark';
 export const THEME_STORAGE_KEY = 'di-theme';
 
 function readTheme(): Theme {
-  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
 }
 
 function persistTheme(theme: Theme) {
@@ -61,7 +61,7 @@ export default function ThemeToggle({ className = '' }: { className?: string }) 
     }
   };
 
-  const isDark = theme !== 'light';
+  const isDark = theme === 'dark';
   const label = isDark ? 'Activar modo día' : 'Activar modo noche';
 
   return (

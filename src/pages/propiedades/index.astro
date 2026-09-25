@@ -1,43 +1,57 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PropertySearch from '../../components/react/PropertySearch.tsx';
-import MapSection from '../../components/sections/MapSection.astro';
-import { PROPERTIES } from '../../data/properties';
-import { BRAND } from '../../data/site';
+import { getProperties } from '../../lib/catalog';
+import type { Property } from '../../data/properties';
+import { WHATSAPP_URL } from '../../data/site';
 
-/** Figma: nodos 163:4744 (claro) y 152:2414 (oscuro). */
+/**
+ * Catálogo completo: sólo los filtros y todas las propiedades, sin paginar.
+ * La búsqueda por texto libre vive en la home.
+ */
+
+// Se consulta Supabase en cada visita: lo que se agrega o elimina en la base
+// de datos se ve aquí en la siguiente recarga.
+let properties: Property[] = [];
+let failed = false;
+try {
+  properties = await getProperties();
+} catch (error) {
+  console.error(error);
+  failed = true;
+}
 ---
 
 <BaseLayout
-  title="Busca tu inmueble ideal en Bogotá — Daniel Inmuebles"
-  description="Busca apartamentos, casas y oficinas en el norte de Bogotá por zona, habitaciones, baños y precio, o describe con tus palabras lo que necesitas."
+  title="Propiedades en Bogotá — Daniel Inmuebles"
+  description="Todos nuestros apartamentos y casas en Bogotá. Filtra por zona, habitaciones, baños, precio y tipo de inmueble."
 >
   <section class="section-x py-[70px]">
-    <div class="container-site flex flex-col gap-[25.5px]">
-      <div class="flex flex-col items-center gap-[25.5px] px-8 text-center text-fg">
-        <div class="flex flex-col items-center font-semibold">
-          <p class="text-[20px] leading-[22px]">{BRAND.legalName}</p>
-          <p class="text-[22px] leading-9 tracking-[-0.64px] sm:text-[32px]">{BRAND.instagram}</p>
-        </div>
-
-        <div class="flex flex-col items-center gap-2">
-          <h1
-            class="font-display text-[40px] leading-[1.02] font-extrabold tracking-[-0.03em] md:text-[56px] xl:text-[76px] xl:leading-[74.48px]"
-          >
-            Busca tu inmueble ideal
-          </h1>
-          <p class="font-body text-[19px] leading-[30.4px]">
-            Describe lo que buscas por características, ubicación, precio, etc.
-          </p>
-        </div>
-      </div>
-
-      <div class="pt-8">
-        <PropertySearch client:load properties={PROPERTIES} />
-      </div>
+    <div class="container-site">
+      <h1 class="sr-only">Propiedades</h1>
+      {
+        failed ? (
+          <div class="rounded-(--radius-field) bg-card p-10 text-center text-fg">
+            <p class="text-[19px] font-semibold">
+              No pudimos cargar las propiedades en este momento.
+            </p>
+            <p class="mt-2 text-[16px] leading-5">
+              Recarga la página en unos segundos o{' '}
+              <a href={WHATSAPP_URL} class="underline" target="_blank" rel="noopener noreferrer">
+                escríbenos por WhatsApp
+              </a>
+              .
+            </p>
+          </div>
+        ) : (
+          <PropertySearch
+            client:load
+            properties={properties}
+            textSearch={false}
+            paginate={false}
+          />
+        )
+      }
     </div>
   </section>
-
-  <!-- En Figma el mapa lleva "Ver todas las propiedades"; aquí sobra porque ya estamos en esa página -->
-  <MapSection showCta={false} />
 </BaseLayout>

@@ -1,5 +1,5 @@
 ---
-import { formatPriceShort, type Property } from '../data/properties';
+import { formatPriceShort, formatPropertyMeta, type Property } from '../data/properties';
 
 /**
  * Tarjeta grande del bloque "Propiedades destacadas".
@@ -11,16 +11,14 @@ interface Props {
 
 const { property } = Astro.props;
 const href = `/propiedades/${property.slug}`;
-
-// El bloque de destacadas usa su propia foto en el diseño.
-const image = property.featuredImage ?? property.image;
+const meta = formatPropertyMeta({ ...property, neighborhood: null });
 ---
 
 <article class="flex h-[449px] flex-1 flex-col overflow-hidden rounded-(--radius-panel) bg-card">
-  <a href={href} class="min-h-0 flex-1 overflow-hidden">
+  <a href={href} class="min-h-0 flex-1 overflow-hidden bg-fg/5">
     <img
-      src={image}
-      alt={`${property.title} en ${property.neighborhood}`}
+      src={`${property.cover}${property.cover.startsWith('/api/') ? '?w=900' : ''}`}
+      alt={property.title}
       width="384"
       height="290"
       loading="lazy"
@@ -34,15 +32,13 @@ const image = property.featuredImage ?? property.image;
       <h3 class="text-[20px] font-bold">
         <a href={href} class="transition-opacity hover:opacity-70">{property.title}</a>
       </h3>
-      <span class="text-[12px] font-semibold whitespace-nowrap">{property.neighborhood}</span>
+      {property.zone && <span class="text-[12px] font-semibold whitespace-nowrap">{property.zone}</span>}
     </div>
 
     <p class="font-display text-[32px] font-bold text-accent">
       {formatPriceShort(property.price)}
     </p>
 
-    <p class="text-[12px] font-semibold">
-      {property.area} m² · {property.bedrooms} hab · {property.bathrooms} baños
-    </p>
+    {meta && <p class="text-[12px] font-semibold">{meta}</p>}
   </div>
 </article>

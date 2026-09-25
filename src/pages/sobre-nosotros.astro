@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import FeaturedProperties from '../components/sections/FeaturedProperties.astro';
+import BuyOrSell from '../components/sections/BuyOrSell.astro';
+import About from '../components/sections/About.astro';
+import Services from '../components/sections/Services.astro';
+import Stats from '../components/sections/Stats.astro';
+import MapSection from '../components/sections/MapSection.astro';
+import Testimonials from '../components/sections/Testimonials.astro';
+import Faq from '../components/sections/Faq.astro';
+import ValuationCta from '../components/sections/ValuationCta.astro';
+import { getProperties } from '../lib/catalog';
+import type { Property } from '../data/properties';
+
+// Si Supabase no responde, la página se muestra igual, sin los bloques de propiedades.
+let properties: Property[] = [];
+try {
+  properties = (await getProperties()).filter((p) => !p.unavailable);
+} catch (error) {
+  console.error(error);
+}
+
+// Destacadas: las más recientes que ya tienen fotos.
+const withPhotos = properties.filter((p) => p.photosUrl);
+const featured = (withPhotos.length >= 3 ? withPhotos : properties).slice(0, 3);
+const onMap = properties.slice(0, 12);
+---
+
+<BaseLayout
+  title="Sobre nosotros — Daniel Inmuebles, compra y venta de inmuebles en Bogotá"
+  description="Te acompañamos en la decisión más importante de tu vida. Comercializamos propiedades en el norte de Bogotá con estrategia, criterio y acompañamiento de principio a fin."
+>
+  <Hero />
+  <FeaturedProperties properties={featured} />
+  <BuyOrSell />
+  <About />
+  <Services />
+  <Stats />
+  <MapSection properties={onMap} tone="home" />
+  <Testimonials />
+  <Faq />
+  <ValuationCta />
+</BaseLayout>

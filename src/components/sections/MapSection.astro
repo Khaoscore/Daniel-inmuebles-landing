@@ -1,41 +1,51 @@
 ---
 import PropertyMap from '../react/PropertyMap.tsx';
 import Button from '../ui/Button.astro';
-import { PROPERTIES } from '../../data/properties';
+import type { Property } from '../../data/properties';
 
 /** Figma: nodos 217:659 (claro) y 149:1139 (oscuro). */
 interface Props {
+  properties: Property[];
   title?: string;
   showCta?: boolean;
-  /** Ver `tone` en PropertyMap: la home oscura lleva pines blancos. */
+  /** Destino de "Ver todas las propiedades". */
+  ctaHref?: string;
+  /** Ver `tone` en PropertyMap: la home oscura lleva marco azul. */
   tone?: 'home' | 'default';
+  /** Ver `primaryId` en PropertyMap. */
+  primaryId?: number;
 }
 
 const {
+  properties,
   title = 'Encuentra tu propiedad ideal en el mapa',
   showCta = true,
+  ctaHref = '/propiedades',
   tone = 'default',
+  primaryId,
 } = Astro.props;
 ---
 
-<section class="section-x section-y">
-  <div class="container-site flex flex-col gap-8">
-    {
-      title && (
-        <div class="flex flex-wrap items-start justify-between gap-6">
-          <h2 class="font-display max-w-[740px] text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]">
-            {title}
-          </h2>
+{
+  properties.length > 0 && (
+    <section class="section-x section-y">
+      <div class="container-site flex flex-col gap-8">
+        {title && (
+          <div class="flex flex-wrap items-start justify-between gap-6">
+            <h2 class="font-display max-w-[740px] text-[32px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[48px] md:leading-[50.4px]">
+              {title}
+            </h2>
 
-          {showCta && (
-            <Button href="/propiedades" variant="soft" size="lg" icon="east">
-              Ver todas las propiedades
-            </Button>
-          )}
-        </div>
-      )
-    }
+            {showCta && (
+              <Button href={ctaHref} variant="soft" size="lg" icon="east">
+                Ver todas las propiedades
+              </Button>
+            )}
+          </div>
+        )}
 
-    <PropertyMap client:visible properties={PROPERTIES} tone={tone} />
-  </div>
-</section>
+        <PropertyMap client:visible properties={properties} tone={tone} primaryId={primaryId} />
+      </div>
+    </section>
+  )
+}

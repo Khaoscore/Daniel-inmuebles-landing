@@ -17,7 +17,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="es-CO" data-theme="dark">
+<html lang="es-CO" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,7 +25,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <!--
       Fija el modo antes del primer pintado para evitar el parpadeo:
       1) la elección guardada con el botón día/noche,
-      2) si no hay, la preferencia del sistema operativo.
+      2) si no hay, el modo claro (el principal del sitio, a pedido del cliente;
+         no se sigue la preferencia del sistema operativo).
       La clave debe coincidir con THEME_STORAGE_KEY en ThemeToggle.tsx.
     -->
     <script is:inline>
@@ -35,14 +36,13 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
           theme = localStorage.getItem('di-theme');
         } catch (e) {}
         if (theme !== 'light' && theme !== 'dark') {
-          theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          theme = 'light';
         }
         document.documentElement.dataset.theme = theme;
       })();
     </script>
 
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#021024" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
