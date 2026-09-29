@@ -42,13 +42,8 @@ export const SOCIAL_LINKS = [
   },
   {
     label: 'TikTok',
-    href: 'https://tiktok.com/@danielinmueblesbogota',
+    href: 'https://www.tiktok.com/@danielinmueblesbo',
     icon: '/assets/icons/tiktok.svg',
-  },
-  {
-    label: 'Facebook',
-    href: 'https://facebook.com/danielinmueblesbogota',
-    icon: '/assets/icons/facebook.svg',
   },
 ] as const;
 

@@ -201,7 +201,7 @@
   --c-ghost: #bcbcbc;
   --c-toggle: #ffcc00;
   --c-toggle-fg: #031939;
-  --c-toggle-line: #0c1727;
+  --c-toggle-line: var(--color-brand-yellow);
   --c-more: #0c1727;
   --c-more-fg: #ffcc00;
   --r-toggle: 8px;
@@ -274,7 +274,7 @@
   --c-ghost: #dae1f7;
   --c-toggle: #ffffff;
   --c-toggle-fg: #052a5e;
-  --c-toggle-line: #ffffff;
+  --c-toggle-line: var(--color-brand-yellow);
   --c-more: #ffffff;
   --c-more-fg: #031c69;
   --r-toggle: 999px;
