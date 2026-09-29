@@ -1,0 +1,114 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { BRAND, CONTACT, LEGAL } from '../data/site';
+---
+
+<LegalLayout
+  title="Términos y condiciones — Daniel Inmuebles"
+  heading="Términos y condiciones de uso"
+  description="Condiciones que aplican al uso del sitio web de Daniel Inmuebles y a la información publicada sobre los inmuebles."
+>
+  <p>
+    Estos términos regulan el uso del sitio web de {BRAND.name}, marca operada por
+    {LEGAL.owner}{LEGAL.nit && ` (NIT ${LEGAL.nit})`}, con domicilio en {LEGAL.city}. Al navegar por el sitio
+    aceptas estas condiciones. Si no estás de acuerdo con ellas, te pedimos no usarlo.
+  </p>
+
+  <h2>1. Objeto del sitio</h2>
+  <p>
+    El sitio es una vitrina informativa de los servicios inmobiliarios de {BRAND.name} y de los
+    inmuebles que comercializamos en Bogotá. A través de él no se celebran contratos ni se
+    realizan pagos. Cualquier negocio se formaliza por escrito, directamente con nuestro equipo.
+  </p>
+
+  <h2>2. Información de los inmuebles</h2>
+  <ul>
+    <li>
+      Los precios, áreas, características, fotografías y ubicaciones publicados son de carácter
+      informativo y los suministran los propietarios. Pueden cambiar sin previo aviso.
+    </li>
+    <li>
+      La ubicación que se muestra en el mapa es aproximada y puede no corresponder a la dirección
+      exacta del inmueble.
+    </li>
+    <li>
+      La publicación de un inmueble no es una oferta vinculante. Su disponibilidad, precio y
+      condiciones se confirman al momento de la negociación.
+    </li>
+    <li>
+      Te recomendamos visitar el inmueble y revisar su documentación antes de tomar cualquier
+      decisión. Te acompañamos en ese proceso.
+    </li>
+  </ul>
+
+  <h2>3. Servicios y honorarios</h2>
+  <p>
+    Los servicios de asesoría, comercialización y valoración, así como los honorarios o comisiones
+    que correspondan, se acuerdan en un contrato de corretaje o mandato firmado con cada cliente.
+    Lo que se publique en este sitio sobre tarifas es orientativo y prevalece siempre lo pactado
+    en dicho contrato.
+  </p>
+
+  <h2>4. Uso adecuado del sitio</h2>
+  <p>Al usar el sitio te comprometes a no:</p>
+  <ul>
+    <li>Usarlo para fines ilícitos o que afecten derechos de terceros.</li>
+    <li>
+      Copiar, extraer de forma masiva o reproducir su contenido con fines comerciales sin nuestra
+      autorización.
+    </li>
+    <li>Intentar acceder sin permiso a sus sistemas o interferir en su funcionamiento.</li>
+  </ul>
+
+  <h2>5. Propiedad intelectual</h2>
+  <p>
+    La marca {BRAND.name}, el logotipo, el diseño, los textos y las fotografías del sitio son
+    propiedad de {LEGAL.owner} o se usan con autorización de sus titulares, y están protegidos por
+    las normas de propiedad intelectual. Puedes compartir los enlaces de los inmuebles, pero no
+    reproducir su contenido sin autorización previa y por escrito.
+  </p>
+
+  <h2>6. Enlaces a terceros</h2>
+  <p>
+    El sitio contiene enlaces a servicios de terceros como WhatsApp, Instagram, TikTok y Google
+    Maps. No controlamos esos servicios ni somos responsables de su contenido o de sus políticas
+    de privacidad.
+  </p>
+
+  <h2>7. Responsabilidad</h2>
+  <p>
+    Procuramos que la información del sitio sea exacta y esté actualizada, y que el sitio
+    funcione de forma continua. Sin embargo, no garantizamos la ausencia de errores o
+    interrupciones. {BRAND.name} no responde por decisiones tomadas únicamente con base en la
+    información publicada, sin la confirmación y el acompañamiento de nuestro equipo.
+  </p>
+
+  <h2>8. Datos personales</h2>
+  <p>
+    El tratamiento de los datos personales que nos entregues se rige por nuestra
+    <a href="/politica-de-privacidad">Política de privacidad</a>. El uso de cookies se describe en
+    la <a href="/cookies">Política de cookies</a>.
+  </p>
+
+  <h2>9. Cambios a estos términos</h2>
+  <p>
+    Podemos modificar estos términos en cualquier momento. La versión vigente es la publicada en
+    esta página, con su fecha de actualización.
+  </p>
+
+  <h2>10. Ley aplicable</h2>
+  <p>
+    Estos términos se rigen por las leyes de la República de Colombia. Cualquier controversia se
+    resolverá ante los jueces competentes de Bogotá D.C., sin perjuicio de los derechos que te
+    otorga el Estatuto del Consumidor (Ley 1480 de 2011).
+  </p>
+
+  <h2>11. Contacto</h2>
+  <p>
+    Si tienes preguntas sobre estos términos, escríbenos a
+    <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> o al WhatsApp
+    <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer"
+      >{CONTACT.phoneDisplay}</a
+    >.
+  </p>
+</LegalLayout>

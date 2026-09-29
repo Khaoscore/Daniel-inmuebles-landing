@@ -1,0 +1,151 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { BRAND, CONTACT, LEGAL } from '../data/site';
+---
+
+<LegalLayout
+  title="Política de privacidad — Daniel Inmuebles"
+  heading="Política de privacidad y tratamiento de datos personales"
+  description="Cómo Daniel Inmuebles recolecta, usa y protege tus datos personales, y cómo ejercer tus derechos según la Ley 1581 de 2012."
+>
+  <p>
+    En {BRAND.name} respetamos tu privacidad. Esta política explica qué datos personales
+    recolectamos, para qué los usamos y cómo puedes ejercer tus derechos, de acuerdo con la Ley
+    1581 de 2012, el Decreto 1377 de 2013 (compilado en el Decreto 1074 de 2015) y las demás
+    normas colombianas sobre protección de datos personales.
+  </p>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <ul>
+    <li><strong>Razón social:</strong> {LEGAL.owner}, que opera la marca {BRAND.name}.</li>
+    {LEGAL.nit && <li><strong>NIT:</strong> {LEGAL.nit}</li>}
+    {LEGAL.address && <li><strong>Dirección:</strong> {LEGAL.address}</li>}
+    <li><strong>Domicilio:</strong> {LEGAL.city}</li>
+    <li>
+      <strong>Correo:</strong> <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+    </li>
+    <li>
+      <strong>Teléfono y WhatsApp:</strong>{' '}
+      <a href={CONTACT.whatsappUrl} target="_blank" rel="noopener noreferrer">
+        {CONTACT.phoneDisplay}
+      </a>
+    </li>
+  </ul>
+
+  <h2>2. Datos que recolectamos</h2>
+  <p>
+    Este sitio no tiene formularios de registro. Recibimos tus datos cuando nos escribes por
+    WhatsApp, correo, teléfono o redes sociales, o cuando nos contratas. Según el caso, podemos
+    tratar:
+  </p>
+  <ul>
+    <li>Datos de identificación y contacto: nombre, número de documento, teléfono y correo.</li>
+    <li>
+      Información sobre tu búsqueda o tu inmueble: zona de interés, presupuesto, características,
+      fotografías y documentos del inmueble (certificado de tradición y libertad, escrituras,
+      paz y salvos, entre otros).
+    </li>
+    <li>
+      Información necesaria para la negociación y el cierre: datos que exijan la promesa de
+      compraventa, la escrituración o las entidades financieras que intervengan.
+    </li>
+    <li>
+      Datos técnicos de navegación, como la dirección IP y el tipo de navegador, que se generan
+      al visitar el sitio. Consulta nuestra <a href="/cookies">Política de cookies</a>.
+    </li>
+  </ul>
+  <p>
+    No solicitamos datos sensibles ni datos de menores de edad. Si en algún caso fueran
+    necesarios, te pediremos una autorización expresa y te informaremos que no estás obligado a
+    entregarlos.
+  </p>
+
+  <h2>3. Finalidades del tratamiento</h2>
+  <ul>
+    <li>Responder tus consultas y agendar visitas a los inmuebles.</li>
+    <li>Prestar los servicios de asesoría, comercialización, compra, venta y valoración.</li>
+    <li>Publicar y promocionar los inmuebles que nos encargues vender.</li>
+    <li>
+      Gestionar la negociación, la promesa de compraventa, la escrituración y el cierre de cada
+      operación.
+    </li>
+    <li>
+      Enviarte información sobre inmuebles que se ajusten a tu búsqueda, sólo si nos autorizas.
+      Puedes pedir que dejemos de hacerlo en cualquier momento.
+    </li>
+    <li>Cumplir obligaciones legales, contables, tributarias y de prevención de lavado de activos.</li>
+    <li>Atender peticiones, quejas y reclamos.</li>
+  </ul>
+
+  <h2>4. Autorización</h2>
+  <p>
+    Al contactarnos y entregarnos tus datos, nos autorizas de forma previa, expresa e informada a
+    tratarlos para las finalidades descritas. Puedes revocar esta autorización en cualquier
+    momento, salvo cuando exista un deber legal o contractual de conservar la información.
+  </p>
+
+  <h2>5. Con quién compartimos tus datos</h2>
+  <p>No vendemos ni alquilamos tus datos personales. Sólo los compartimos con:</p>
+  <ul>
+    <li>
+      La otra parte de la negociación, notarías, entidades financieras y demás personas que
+      deban intervenir para completar la operación que solicitaste.
+    </li>
+    <li>
+      Proveedores tecnológicos que nos prestan servicios de alojamiento web, almacenamiento y
+      mensajería (por ejemplo, Vercel, Supabase, Google y Meta/WhatsApp). Algunos de ellos
+      guardan información fuera de Colombia, en países con niveles adecuados de protección o
+      bajo las garantías que exige la ley.
+    </li>
+    <li>Autoridades que lo soliciten en ejercicio de sus funciones legales.</li>
+  </ul>
+
+  <h2>6. Tus derechos</h2>
+  <p>Como titular de los datos tienes derecho a:</p>
+  <ul>
+    <li>Conocer, actualizar y rectificar tus datos personales.</li>
+    <li>Solicitar prueba de la autorización que nos diste.</li>
+    <li>Ser informado sobre el uso que hemos dado a tus datos.</li>
+    <li>
+      Presentar quejas ante la Superintendencia de Industria y Comercio (SIC) por infracciones a
+      la ley, después de haber agotado el trámite de consulta o reclamo con nosotros.
+    </li>
+    <li>
+      Revocar la autorización o pedir que suprimamos tus datos cuando no exista un deber legal o
+      contractual de conservarlos.
+    </li>
+    <li>Acceder de forma gratuita a tus datos personales.</li>
+  </ul>
+
+  <h2>7. Cómo ejercer tus derechos</h2>
+  <p>
+    Escríbenos a <a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> indicando tu nombre,
+    documento de identidad, la solicitud concreta y un medio para responderte.
+  </p>
+  <ul>
+    <li>
+      <strong>Consultas:</strong> las respondemos en un máximo de diez (10) días hábiles,
+      prorrogables por cinco (5) días hábiles más si te lo informamos antes del vencimiento.
+    </li>
+    <li>
+      <strong>Reclamos</strong> (corrección, actualización, supresión o incumplimiento): los
+      respondemos en un máximo de quince (15) días hábiles, prorrogables por ocho (8) días
+      hábiles más si te lo informamos antes del vencimiento.
+    </li>
+  </ul>
+
+  <h2>8. Seguridad y conservación</h2>
+  <p>
+    Aplicamos medidas técnicas, humanas y administrativas razonables para proteger tus datos
+    contra pérdida, acceso no autorizado o uso indebido. Conservamos la información mientras sea
+    necesaria para las finalidades descritas y durante los plazos que exijan las normas
+    comerciales, contables y tributarias.
+  </p>
+
+  <h2>9. Cambios a esta política</h2>
+  <p>
+    Podemos actualizar esta política. Publicaremos cualquier cambio en esta página con su nueva
+    fecha de actualización. Si el cambio es sustancial, te lo informaremos por los medios de
+    contacto que tengamos.
+  </p>
+</LegalLayout>
