@@ -292,10 +292,10 @@ export default function PropertySearch({ properties, textSearch = true, paginate
               </div>
 
               <div className="flex flex-col gap-4 px-6">
-                <p className="rounded-(--radius-chip) border border-option-border bg-option px-4 py-2 text-[16px] leading-5 font-semibold whitespace-nowrap text-fg">
+                <p className="rounded-(--radius-chip) border border-brand-yellow bg-option px-4 py-2 text-[16px] leading-5 font-semibold whitespace-nowrap text-fg">
                   Mín: {formatPriceFull(minPrice)}
                 </p>
-                <p className="rounded-(--radius-chip) border border-option-border bg-option px-4 py-2 text-[16px] leading-5 font-semibold whitespace-nowrap text-fg">
+                <p className="rounded-(--radius-chip) border border-brand-yellow bg-option px-4 py-2 text-[16px] leading-5 font-semibold whitespace-nowrap text-fg">
                   Máx: {formatPriceFull(maxPrice)}
                 </p>
               </div>
@@ -623,7 +623,7 @@ function OptionGrid({
             className={`flex h-[67px] items-center justify-center rounded-(--radius-chip) border text-[16px] leading-5 font-semibold transition-colors ${
               active
                 ? 'border-transparent bg-option-active text-option-active-fg'
-                : 'border-option-border bg-option text-option-fg hover:border-line/40'
+                : 'border-brand-yellow bg-option text-option-fg hover:bg-fg/5'
             }`}
           >
             {roomLabel(option)}

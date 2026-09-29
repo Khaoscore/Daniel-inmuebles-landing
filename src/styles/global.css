@@ -201,7 +201,7 @@
   --c-ghost: #bcbcbc;
   --c-toggle: #ffcc00;
   --c-toggle-fg: #031939;
-  --c-toggle-line: #0c1727;
+  --c-toggle-line: var(--color-brand-yellow);
   --c-more: #0c1727;
   --c-more-fg: #ffcc00;
   --r-toggle: 8px;
@@ -274,7 +274,7 @@
   --c-ghost: #dae1f7;
   --c-toggle: #ffffff;
   --c-toggle-fg: #052a5e;
-  --c-toggle-line: #ffffff;
+  --c-toggle-line: var(--color-brand-yellow);
   --c-more: #ffffff;
   --c-more-fg: #031c69;
   --r-toggle: 999px;
@@ -517,5 +517,61 @@
 
   .map-pin[data-variant='primary'][data-active='true'] {
     outline: 3px solid var(--color-brand-yellow);
+  }
+}
+
+/* ============================================================
+   Texto de las páginas legales (ver src/layouts/LegalLayout.astro)
+   ============================================================ */
+
+@layer components {
+  .legal-prose {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.65;
+  }
+
+  .legal-prose h2 {
+    margin-top: 1.5rem;
+    color: var(--color-heading);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .legal-prose h3 {
+    margin-top: 0.5rem;
+    color: var(--color-heading);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .legal-prose ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  .legal-prose a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .legal-prose a:hover {
+    color: var(--color-accent);
+  }
+
+  .legal-prose strong {
+    font-weight: 500;
+    color: var(--color-heading);
   }
 }

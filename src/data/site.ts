@@ -42,13 +42,8 @@ export const SOCIAL_LINKS = [
   },
   {
     label: 'TikTok',
-    href: 'https://tiktok.com/@danielinmueblesbogota',
+    href: 'https://www.tiktok.com/@danielinmueblesbo',
     icon: '/assets/icons/tiktok.svg',
-  },
-  {
-    label: 'Facebook',
-    href: 'https://facebook.com/danielinmueblesbogota',
-    icon: '/assets/icons/facebook.svg',
   },
 ] as const;
 
@@ -66,6 +61,15 @@ export const FOOTER_LINKS_SECONDARY: NavLink[] = [
   { label: 'Comprar o vender', href: '/sobre-nosotros#comprar-vender' },
   { label: 'Sobre nosotros', href: '/sobre-nosotros' },
 ];
+
+/** Datos del responsable para las páginas legales, según el registro mercantil. */
+export const LEGAL = {
+  owner: 'Inversiones e Inmobiliaria Romac S.A.S.',
+  nit: '901.399.512-0',
+  address: 'Carrera 128 # 144-28, Oficina 303',
+  city: 'Bogotá D.C., Colombia',
+  updated: '29 de septiembre de 2026',
+} as const;
 
 export const LEGAL_LINKS: NavLink[] = [
   { label: 'Política de privacidad', href: '/politica-de-privacidad' },

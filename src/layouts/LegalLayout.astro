@@ -1,0 +1,57 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { LEGAL, LEGAL_LINKS } from '../data/site';
+
+/** Plantilla común de las páginas legales: encabezado, índice entre páginas y texto. */
+
+interface Props {
+  title: string;
+  heading: string;
+  description: string;
+}
+
+const { title, heading, description } = Astro.props;
+const current = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section-x section-y">
+    <div class="mx-auto flex w-full max-w-[800px] flex-col gap-10">
+      <header class="flex flex-col gap-4 text-fg">
+        <p class="text-[14px] font-bold tracking-[0.08em] text-eyebrow uppercase">Legal</p>
+        <h1
+          class="font-display text-[36px] leading-[1.05] font-extrabold tracking-[-0.02em] text-heading md:text-[52px]"
+        >
+          {heading}
+        </h1>
+        <p class="text-[14px] leading-5">Última actualización: {LEGAL.updated}</p>
+      </header>
+
+      <nav aria-label="Documentos legales" class="flex flex-wrap gap-3">
+        {
+          LEGAL_LINKS.map((link) => {
+            const active = link.href === current;
+            return (
+              <a
+                href={link.href}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'rounded-(--radius-chip) border px-4 py-2 text-[14px] font-semibold transition-colors',
+                  active
+                    ? 'border-btn bg-btn text-btn-fg'
+                    : 'border-line text-fg hover:border-btn',
+                ]}
+              >
+                {link.label}
+              </a>
+            );
+          })
+        }
+      </nav>
+
+      <article class="legal-prose">
+        <slot />
+      </article>
+    </div>
+  </section>
+</BaseLayout>
