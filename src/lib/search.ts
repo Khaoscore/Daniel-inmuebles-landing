@@ -550,7 +550,7 @@ function haystackOf(p: Property): string {
   let haystack = haystackCache.get(p);
   if (haystack === undefined) {
     haystack = normalize(
-      [p.title, p.code, p.zone, p.type, p.address, p.description, p.bedroomsText, p.floor, p.areaText, p.parking, p.age]
+      [p.title, p.code, p.zone, p.type, p.description, p.bedroomsText, p.floor, p.areaText, p.parking, p.age]
         .filter(Boolean)
         .join(' '),
     );
