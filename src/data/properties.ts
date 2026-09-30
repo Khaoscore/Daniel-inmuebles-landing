@@ -71,8 +71,11 @@ export interface Property {
   unavailable: boolean;
   zone: string | null;
   neighborhood: string | null;
-  address: string | null;
-  /** Búsqueda para Google Maps: dirección normalizada, coordenadas o barrio. */
+  /**
+   * Búsqueda para Google Maps: dirección normalizada, coordenadas o barrio.
+   * La dirección solo se usa aquí: no se muestra como texto para que los
+   * interesados no contacten al propietario sin el intermediario.
+   */
   mapQuery: string;
   /** true si el mapa ubica el inmueble; false si solo muestra el barrio. */
   mapPrecise: boolean;
@@ -230,8 +233,6 @@ export function mapRow(row: PublicRow): Property {
     unavailable: status !== null && normalize(status) !== 'disponible',
     zone,
     neighborhood,
-    // Un enlace de Maps no es una dirección legible: no se muestra como texto.
-    address: mapsLink ? null : rawAddress,
     mapQuery: location.query,
     mapPrecise: location.precise,
     mapsLink,

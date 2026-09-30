@@ -171,10 +171,8 @@ const listingSchema = {
         </h1>
 
         {
-          (property.address || location) && (
-            <p class="text-[16px] leading-6 text-fg">
-              {property.address ? `${property.address} · ${location}` : location}
-            </p>
+          location && (
+            <p class="text-[16px] leading-6 text-fg">{location}</p>
           )
         }
 
