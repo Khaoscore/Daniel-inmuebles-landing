@@ -64,6 +64,9 @@ src/
   styles/global.css  Paleta, tokens por modo y utilidades
 supabase/
   ubicaciones.sql    Tabla de coordenadas para el mapa
+  sincronizacion.sql Columna id_hoja que enlaza la tabla con el Sheet
+apps-script/
+  sincronizar-supabase.gs  Sincronización Sheet → Supabase (se pega en el Sheet)
 public/assets/       Imágenes e iconos exportados de Figma
 design-assets/       Assets exportados que ya no se usan (no se publican)
 ```
@@ -89,7 +92,9 @@ Google Sheet ──Apps Script──▶ propiedades ──vista──▶ propied
 ```
 
 1. **Google Sheet**: fuente de verdad, una fila por inmueble.
-2. **Apps Script**: copia las filas a la tabla `propiedades` de Supabase.
+2. **Apps Script** (`apps-script/sincronizar-supabase.gs`): deja la tabla
+   `propiedades` de Supabase igual a la pestaña principal del Sheet. Ver
+   [Sincronización Sheet → Supabase](#sincronización-sheet--supabase).
 3. **Vista `propiedades_publicas`**: expone solo lo publicable. Captador,
    documentos, `link_agente` y `ficha_inmueble` se quedan en la tabla. El sitio
    usa la clave publicable, que solo lee esta vista.
@@ -98,10 +103,57 @@ Google Sheet ──Apps Script──▶ propiedades ──vista──▶ propied
    cada fila con `mapRow`.
 5. **Navegador**: el catálogo completo llega como props a las islas.
 
-> El código del Apps Script y el SQL de la tabla `propiedades` y de la vista
-> **no están en este repositorio**. Renombrar, mover o borrar una columna del
-> Sheet exige actualizar el script, la tabla, la vista y `PublicRow`. Agregar
-> columnas al final es seguro.
+> El SQL de la tabla `propiedades` y de la vista **no está en este
+> repositorio**. El script busca cada columna del Sheet por su encabezado:
+> moverlas de lugar o agregar columnas nuevas es seguro; renombrar o borrar un
+> encabezado detiene la sincronización hasta actualizar `COLUMNAS` en el script.
+
+### Sincronización Sheet → Supabase
+
+`apps-script/sincronizar-supabase.gs` copia la pestaña **INVENTARIO DANIEL
+INMUEBLES** a `propiedades`. Las otras pestañas no se publican.
+
+| Cuándo | Qué hace |
+|---|---|
+| Al editar la pestaña | Sincroniza todo en segundos y solo escribe las filas que cambiaron |
+| Al insertar, borrar u ordenar filas | Lo mismo |
+| Cada hora y desde el menú **Web → Sincronizar ahora** | Lo mismo y vuelve a listar todas las carpetas de fotos (`fotos_urls`) |
+
+- **Identidad**: cada fila se reconoce por su **ID INMUEBLE** (columna A),
+  guardado en `id_hoja`. Cambiar el código, el precio o cualquier otro dato
+  actualiza el mismo inmueble, y su `id_inmueble` (el número de su URL) no
+  cambia. Los inmuebles nuevos reciben el siguiente `id_inmueble`, sin reutilizar
+  los de inmuebles borrados.
+- **Filas que se publican**: las que tienen ID INMUEBLE y CODIGO, incluidas las
+  NO DISPONIBLE (la web les pone una etiqueta). Un ID repetido usa la primera fila.
+- **Borrados**: lo que ya no está en el Sheet se borra de Supabase. Si una
+  sincronización fuera a borrar más del 30 % de la tabla, no borra nada y la
+  ejecución falla (`MAX_FRACCION_BORRADO`).
+- **Fotos**: `fotos` sale del chip de Drive de la columna FOTOS. Si una celda de
+  enlace tiene texto pero no se puede sacar una URL, se conserva la anterior y
+  queda un aviso en **Ejecuciones**.
+
+Los avisos y errores se ven en el editor de Apps Script → **Ejecuciones**. Google
+envía por correo un resumen de las ejecuciones fallidas.
+
+**Instalación** (una vez, con la cuenta dueña del Sheet)
+
+1. Ejecutar `supabase/sincronizacion.sql` en el SQL Editor de Supabase. Agrega
+   `id_hoja`.
+2. En el Sheet: **Extensiones → Apps Script**. Borrar el código de
+   sincronización anterior: si queda, sigue insertando filas por su cuenta.
+3. Pegar `apps-script/sincronizar-supabase.gs` en un archivo del proyecto.
+4. **Configuración del proyecto → Propiedades del script**: `SUPABASE_URL` y
+   `SUPABASE_SECRET_KEY` (la clave secreta, no la publicable).
+5. Opcional pero recomendado: **Servicios → + → Google Sheets API**. Es el plan
+   B para leer los chips de Drive si `getRichTextValues` no devuelve su enlace.
+6. Elegir la función `configurar` y **Ejecutar**. Pide permisos (Sheets, Drive,
+   conexiones externas), instala los activadores, elimina los del script anterior
+   y hace la primera sincronización.
+
+La primera sincronización enlaza las filas que ya estaban en Supabase con el
+Sheet (por código y, si cambió, por carpeta de Drive), publica las que faltaban
+y borra las que ya no están en el Sheet.
 
 ### Limpieza de cada fila (`mapRow`)
 
@@ -251,7 +303,7 @@ filtrar. Solo se muestran en el panel las que tiene al menos un inmueble.
   ranking y las etiquetas la toman solos.
 - **Sinónimos**: tipos en `canonical()`, características en su `words`,
   palabras a ignorar en `STOPWORDS`.
-- **Columna nueva del Sheet**: Sheet → Apps Script → tabla y vista →
+- **Columna nueva del Sheet**: Sheet → `COLUMNAS` del Apps Script → tabla y vista →
   `PublicRow` → `mapRow` / `Property` → y, si se filtra, `SearchFilters`,
   `EMPTY_FILTERS`, `buildCriteria`, `describeExtraFilters` y el panel.
 
@@ -367,8 +419,8 @@ Para agregar uno, se registra en `src/data/icons.ts`.
 
 ## Pendientes
 
-1. **Versionar el Apps Script y el esquema.** El script de sincronización y el
-   SQL de `propiedades` y `propiedades_publicas` no están en el repo.
+1. **Versionar el esquema.** El SQL de `propiedades` y `propiedades_publicas`
+   no está en el repo (el Apps Script sí: `apps-script/`).
 2. **Pruebas del buscador.** `parseQuery` y `searchProperties` son funciones
    puras; una tabla de frases con su salida esperada (p. ej. con Vitest)
    evitaría regresiones al agregar reglas.
