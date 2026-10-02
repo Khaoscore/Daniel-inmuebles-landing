@@ -24,7 +24,16 @@ try {
   title="Busca tu inmueble ideal en Bogotá — Daniel Inmuebles"
   description="Busca apartamentos y casas en Bogotá por zona, habitaciones, baños y precio, o describe con tus palabras lo que necesitas."
 >
-  <section id="buscar" class="section-x scroll-mt-24 py-[70px]">
+  <section id="buscar" class="section-x relative isolate scroll-mt-24 py-[70px]">
+    <!-- Foto de Bogotá casi imperceptible detrás del título; el velo usa el
+         color de la página, así funciona igual en modo claro y oscuro. -->
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px] bg-[url('/assets/img/hero-bogota.webp')] bg-cover bg-center"
+    >
+      <div class="absolute inset-0 bg-linear-to-b from-page/60 via-page/64 to-page"></div>
+    </div>
+
     <div class="container-site flex flex-col gap-[25.5px]">
       <div class="flex flex-col items-center gap-[25.5px] px-8 text-center text-fg">
         <div class="flex flex-col items-center font-semibold">
